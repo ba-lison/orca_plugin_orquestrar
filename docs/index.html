@@ -1,0 +1,1199 @@
+<!doctype html>
+<html lang="pt-BR" data-densidade="conforto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Orquestrar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inria+Sans:wght@400;700&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&family=Sofia+Sans+Condensed:wght@400;500&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   BALISON · Design System · tokens.css
+   Fonte das regras: DESIGN.md (mesma pasta). Direção "Mão e máquina".
+   O traço (grafismo) é gerado por traco.js, na mesma pasta.
+   Camadas: 1) primitivos (valores)  2) semânticos (função)  3) componentes.
+   Use sempre os semânticos no código. Primitivo direto só dentro deste arquivo.
+   Tema:      <html data-tema="claro|escuro">   (sem atributo: segue o sistema)
+   Densidade: <html data-densidade="conforto|padrao|compacta|plugin">
+   ===================================================================== */
+
+/* ---------- Fontes (caminho relativo a esta pasta) ---------- */
+
+:root {
+  /* ============ 1. PRIMITIVOS ============ */
+  /* Marca (guia) */
+  --p-branco: #F5F5F5;
+  --p-preto: #131721;
+  --p-caneta: #2347B0;
+  --p-caneta-escuro: #16295C;
+  --p-caneta-fundo: #101F48;    /* pressionado */
+  --p-branco-puro: #FFFFFF;    /* só quando o meio não aceita o branco da marca */
+
+
+  --p-neutro-050: #ECEDEF;
+  --p-neutro-100: #E1E3E7;
+  --p-neutro-200: #D1D4DB;
+  --p-neutro-300: #B9BEC7;
+  --p-neutro-400: #999FAB;
+  --p-neutro-500: #757C89;
+  --p-neutro-600: #5F6775;
+  --p-neutro-700: #474F5D;
+  --p-neutro-800: #303642;
+  --p-neutro-900: #131721;
+  --p-escuro-1: #1D222E;       /* superfícies no tema escuro */
+  --p-escuro-2: #282D39;
+
+  /* Estados: só em interface (mensagem, validação, status). Nunca em marketing. */
+  --p-erro: #A12F2A;        --p-erro-claro: #F0897F;
+  --p-aviso: #80520A;       --p-aviso-claro: #E3B04B;
+  --p-sucesso: #2C6A36;     --p-sucesso-claro: #8CC793;
+
+  /* ============ Tipografia ============ */
+  /* Newsreader fala (títulos e citação), Inria Sans explica (texto e interface),
+     Plex Mono só em código e prompt. Todas as entrelinhas em múltiplos de 4. */
+  --fonte-display: "Newsreader", Georgia, "Times New Roman", serif;
+  --fonte-detalhe: "Sofia Sans Condensed", sans-serif;
+  --fonte-texto: "Inria Sans", "Segoe UI", system-ui, sans-serif;
+  --fonte-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+
+  --peso-texto: 400;  --peso-medio: 500;  --peso-forte: 600;
+
+  --tipo-display: 400 clamp(2.75rem, 6.4vw, 5.5rem)/1.04 var(--fonte-display);   /* 44 → 88 */
+  --tipo-t1: 400 3rem/3.5rem var(--fonte-display);                               /* 48/56 */
+  --tipo-t2: 400 2rem/2.5rem var(--fonte-display);                               /* 32/40 */
+  --tipo-t3: 400 1.5rem/2rem var(--fonte-display);                               /* 24/32 */
+  --tipo-citacao: italic 400 1.5rem/2rem var(--fonte-display);                   /* 24/32 */
+  --tipo-titulo-comp: 500 1rem/1.5rem var(--fonte-texto);                        /* 16/24: card, modal */
+  --tipo-texto: 400 1.0625rem/1.75rem var(--fonte-texto);                        /* 17/28 */
+  --tipo-texto-ui: 400 0.875rem/1.25rem var(--fonte-texto);                      /* 14/20 */
+  --tipo-legenda: 400 0.8125rem/1.25rem var(--fonte-detalhe);                      /* 13/20 */
+  --tipo-rotulo: 500 0.8125rem/1.25rem var(--fonte-detalhe);                       /* 13/20, frase normal, sem maiúsculas */
+  --tipo-numero: 400 3rem/1 var(--fonte-detalhe);                                /* número de destaque */
+  --tipo-codigo: 400 0.875rem/1.5rem var(--fonte-mono);                          /* 14/24 */
+  --tracking-display: -0.025em; --tracking-t: -0.015em; --tracking-t3: -0.01em; --tracking-rotulo: 0.01em;
+  --medida: 62ch;
+
+  /* ============ Espaço (8 px na estrutura, 4 px no ajuste fino) ============ */
+  --esp-0: 0; --esp-1: 2px; --esp-2: 4px; --esp-3: 8px; --esp-4: 12px; --esp-5: 16px;
+  --esp-6: 24px; --esp-7: 32px; --esp-8: 40px; --esp-9: 48px; --esp-10: 64px;
+  --esp-11: 80px; --esp-12: 120px; --esp-13: 160px;
+  --gutter: clamp(16px, 4vw, 48px);
+  --container: 1200px;
+  --secao: clamp(96px, 12vw, 192px);      /* respiro entre seções no marketing (v2: o dobro da v1) */
+  --hero: clamp(120px, 16vw, 240px);
+  --container-texto: 720px;               /* coluna de leitura no marketing */
+
+  /* ============ Forma ============ */
+  --raio: 0;                 /* tudo reto. Exceções abaixo. */
+  --raio-redondo: 9999px;    /* só avatar, radio, ponto e marcador numerado */
+  --linha-w: 1px;
+  --foco-w: 2px; --foco-offset: 2px;
+
+  /* ============ Movimento ============ */
+  --dur-rapida: 120ms;       /* hover, troca de cor */
+  --dur-base: 200ms;         /* abrir menu, tooltip, toggle */
+  --dur-lenta: 320ms;        /* modal, painel lateral */
+  --dur-traco: 900ms;        /* linha simples que se desenha (ícone, ✓, sublinhado) */
+  --dur-traco-maquina: 760ms; /* cada linha precisa do traco.js */
+  --traco-mao-final: .3;     /* opacidade da mão quando a máquina termina: fica visível */
+  --dur-check: 240ms;        /* ✓ que se desenha em checkbox e confirmação */
+  --dur-confirmacao: 1600ms; /* quanto tempo o botão fica em "Copiado/Salvo" */
+  --ease-padrao: cubic-bezier(.2, 0, 0, 1);
+  --ease-saida: cubic-bezier(.16, 1, .3, 1);
+  --ease-traco: cubic-bezier(.65, 0, .35, 1);   /* a máquina */
+  --ease-mao: cubic-bezier(.3, .1, .3, 1);      /* a mão: começa firme, solta no fim */
+
+  /* ============ Camadas ============ */
+  --z-fixo: 10; --z-menu: 20; --z-sobreposicao: 30; --z-modal: 40; --z-toast: 50; --z-tooltip: 60;
+
+}
+
+/* ============ Densidade padrao (app web). Vale na raiz e em qualquer contêiner. ============ */
+:root, [data-densidade="padrao"] {
+  --controle-h: 40px;  --controle-px: 16px;  --controle-gap: 8px;
+  --celula-py: 12px;   --celula-px: 16px;
+  --card-p: 24px;      --icone: 20px;
+  --tipo-controle: var(--tipo-texto-ui);
+}
+
+/* ============ 2. SEMÂNTICOS · tema claro (raiz e qualquer contêiner com data-tema="claro") ============ */
+:root, [data-tema="claro"] {
+  color-scheme: light;
+  --fundo: var(--p-branco);
+  --superficie: #FFFFFF;               /* card sobre o fundo (guia) */
+  --superficie-2: var(--p-neutro-050); /* hover de linha, faixa de tabela */
+  --superficie-inversa: var(--p-preto);
+  --texto: var(--p-preto);
+  --texto-2: #525A68;
+  --texto-3: var(--p-neutro-600);
+  --texto-inverso: var(--p-branco);
+  --linha: rgba(22, 22, 22, .16);      /* divisória, borda de card */
+  --linha-forte: rgba(22, 22, 22, .38);/* moldura, cabeçalho de tabela */
+  --borda-campo: var(--p-neutro-500);  /* campo e controle: 3:1 exigido */
+
+
+  --acao: var(--p-caneta);              /* botão primário. Um por tela. */
+  --acao-texto: var(--p-branco);
+  --acao-hover: var(--p-caneta-escuro);
+  --acao-ativa: var(--p-caneta-fundo);
+  --link: var(--p-caneta);
+  --link-visitado: var(--p-neutro-700);
+  --destaque: var(--p-caneta);          /* número de destaque, ponto */
+  --foco: var(--p-caneta);
+  --selecao: rgba(15, 61, 58, .12);
+
+  --erro: var(--p-erro);       --erro-fundo: #EBDCDC;    --erro-texto-acao: var(--p-branco);
+  --sucesso-texto-acao: var(--p-branco);
+  --aviso: var(--p-aviso);     --aviso-fundo: #E8DFD9;
+  --sucesso: var(--p-sucesso); --sucesso-fundo: #E1E1DD;
+  --info: var(--p-preto);      --info-fundo: var(--p-neutro-050);
+
+  --sombra-sobreposta: 0 8px 24px rgba(22, 22, 22, .14);  /* só menu, popover, modal, toast */
+  --veu: rgba(22, 22, 22, .56);                           /* fundo atrás do modal */
+
+
+  --dado-1: var(--p-caneta); --dado-2: var(--p-preto); --dado-3: var(--p-neutro-500); --dado-4: var(--p-neutro-300);
+  --dado-eixo: var(--linha-forte); --dado-grade: var(--linha);
+}
+
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema="claro"]) {
+    color-scheme: dark;
+    --fundo: var(--p-preto); --superficie: var(--p-escuro-1); --superficie-2: var(--p-escuro-2);
+    --superficie-inversa: var(--p-branco);
+    --texto: var(--p-branco); --texto-2: var(--p-neutro-400); --texto-3: var(--p-neutro-400); --texto-inverso: var(--p-preto);
+    --linha: rgba(241, 235, 235, .16); --linha-forte: rgba(241, 235, 235, .38); --borda-campo: var(--p-neutro-500);
+
+    --acao: var(--p-branco); --acao-texto: var(--p-preto); --acao-hover: var(--p-neutro-200); --acao-ativa: var(--p-neutro-300);
+    --link: #90A7E9; --link-visitado: var(--p-neutro-300); --destaque: #90A7E9; --foco: var(--p-branco);
+    --selecao: rgba(241, 235, 235, .12);
+    --erro: var(--p-erro-claro); --erro-fundo: #302423; --erro-texto-acao: var(--p-preto); --sucesso-texto-acao: var(--p-preto);
+    --aviso: var(--p-aviso-claro); --aviso-fundo: #2F281C;
+    --sucesso: var(--p-sucesso-claro); --sucesso-fundo: #242B25;
+    --info: var(--p-branco); --info-fundo: var(--p-escuro-2);
+    --sombra-sobreposta: 0 8px 24px rgba(0, 0, 0, .5); --veu: rgba(0, 0, 0, .64);
+    --dado-1: var(--p-branco); --dado-2: var(--p-neutro-400); --dado-3: var(--p-neutro-600); --dado-4: var(--p-neutro-800);
+  }
+}
+[data-tema="escuro"] {
+  color-scheme: dark;
+  --fundo: var(--p-preto); --superficie: var(--p-escuro-1); --superficie-2: var(--p-escuro-2);
+  --superficie-inversa: var(--p-branco);
+  --texto: var(--p-branco); --texto-2: var(--p-neutro-400); --texto-3: var(--p-neutro-400); --texto-inverso: var(--p-preto);
+  --linha: rgba(241, 235, 235, .16); --linha-forte: rgba(241, 235, 235, .38); --borda-campo: var(--p-neutro-500);
+
+  --acao: var(--p-branco); --acao-texto: var(--p-preto); --acao-hover: var(--p-neutro-200); --acao-ativa: var(--p-neutro-300);
+  --link: #90A7E9; --link-visitado: var(--p-neutro-300); --destaque: #90A7E9; --foco: var(--p-branco);
+  --selecao: rgba(241, 235, 235, .12);
+  --erro: var(--p-erro-claro); --erro-fundo: #302423; --erro-texto-acao: var(--p-preto); --sucesso-texto-acao: var(--p-preto);
+  --aviso: var(--p-aviso-claro); --aviso-fundo: #2F281C;
+  --sucesso: var(--p-sucesso-claro); --sucesso-fundo: #242B25;
+  --info: var(--p-branco); --info-fundo: var(--p-escuro-2);
+  --sombra-sobreposta: 0 8px 24px rgba(0, 0, 0, .5); --veu: rgba(0, 0, 0, .64);
+  --dado-1: var(--p-branco); --dado-2: var(--p-neutro-400); --dado-3: var(--p-neutro-600); --dado-4: var(--p-neutro-800);
+}
+
+/* ---------- Densidades ---------- */
+[data-densidade="conforto"] { /* site, landing, toque */
+  --controle-h: 48px; --controle-px: 24px; --controle-gap: 8px;
+  --celula-py: 16px; --celula-px: 16px; --card-p: 32px; --icone: 24px; --tipo-controle: var(--tipo-texto);
+}
+[data-densidade="compacta"] { /* tabelas e painéis densos */
+  --controle-h: 32px; --controle-px: 12px; --controle-gap: 8px;
+  --celula-py: 8px; --celula-px: 12px; --card-p: 16px; --icone: 16px; --tipo-controle: var(--tipo-texto-ui);
+}
+[data-densidade="plugin"] { /* janelas dentro do Revit/AutoCAD */
+  --controle-h: 28px; --controle-px: 8px; --controle-gap: 4px;
+  --celula-py: 4px; --celula-px: 8px; --card-p: 12px; --icone: 16px;
+  --tipo-controle: 400 0.8125rem/1.25rem var(--fonte-texto); /* 13/20 */
+}
+
+/* ---------- Utilitários de marca ---------- */
+/* Desenho "Mão e máquina": <svg class="traco"> + traco.js. A cor é a do texto; --traco troca, se preciso. */
+svg.traco { display: block; width: 100%; height: auto; color: var(--traco, var(--texto)); overflow: visible; }
+svg.traco .traco-ponto { fill: var(--destaque); }
+svg.traco .traco-mao, svg.traco .traco-mao-fixa { color: var(--tinta-mao, currentColor); }
+svg.traco .traco-maquina { color: var(--tinta-maquina, currentColor); }
+/* Linha simples que se desenha (sublinhado, ✓, divisória de abertura). */
+.linha-desenha path, .linha-desenha line { stroke-dasharray: 1; stroke-dashoffset: 1; animation: desenhar var(--dur-traco) var(--ease-traco) forwards; animation-delay: calc(var(--i, 0) * 60ms); }
+@keyframes desenhar { to { stroke-dashoffset: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  /* Tira o movimento, mantém cor e opacidade (ajudam a entender o que mudou). */
+  *, *::before, *::after { animation-duration: 1ms !important; animation-delay: 0ms !important; scroll-behavior: auto !important; }
+  *:active, *:hover > .ico { transform: none !important; }
+  .linha-desenha path, .linha-desenha line { stroke-dashoffset: 0; }
+}
+
+svg.traco { --tinta-mao: var(--destaque); --tinta-maquina: var(--texto); }
+
+/* Acabamento por peça. As três amostras comparativas preservam seus próprios modos. */
+[data-acabamento="humano"] svg.traco:not(.modo-svg) .traco-maquina { display:none; }
+[data-acabamento="humano"] svg.traco:not(.modo-svg) .traco-mao { opacity:1 !important; }
+[data-acabamento="preciso"] svg.traco:not(.modo-svg) .traco-mao { display:none; }
+[data-acabamento] :is(.tag,.alerta) { position:relative; }
+[data-acabamento] .alerta--erro { --tinta-contorno:var(--erro); }
+[data-acabamento] .alerta--sucesso { --tinta-contorno:var(--sucesso); }
+[data-acabamento] .alerta--aviso { --tinta-contorno:var(--aviso); }
+[data-acabamento] .alerta--info { --tinta-contorno:var(--info); }
+:is([data-acabamento="humano"],[data-acabamento="misto"]) :is(.tag,.alerta) { border-color:transparent; }
+:is([data-acabamento="humano"],[data-acabamento="misto"]) :is(.tag,.alerta)::before {
+  content:""; position:absolute; inset:-1px; pointer-events:none;
+  background:var(--tinta-contorno,currentColor);
+  mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%2032%22%20preserveAspectRatio%3D%22none%22%3E%3Cpath%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.3%22%20vector-effect%3D%22non-scaling-stroke%22%20stroke-linecap%3D%22round%22%20d%3D%22M1%203%20Q40%201.5%2098.5%202.2%20M97.6%201%20Q98.1%2013%2097.4%2030.5%20M99%2029.4%20Q51%2028.4%201%2030%20M2.3%2031%20Q1.6%2017%202.8%201%22%2F%3E%3C%2Fsvg%3E") center / 100% 100% no-repeat;
+}
+[data-acabamento="misto"] .tag { box-shadow:inset 0 0 0 1px color-mix(in srgb,currentColor 24%,transparent); }
+
+
+* { box-sizing: border-box; }
+html { background: var(--fundo); }
+body { margin: 0; background: var(--fundo); color: var(--texto); font: var(--tipo-texto); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+h1, h2, h3 { margin: 0; font-weight: 400; text-wrap: balance; }
+h1, h2 { font-family: var(--fonte-display); }
+p, ul, ol, figure { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+a { color: var(--link); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+:focus-visible { outline: var(--foco-w) solid var(--foco); outline-offset: var(--foco-offset); }
+code { font-family: var(--fonte-mono); font-size: .84em; background: var(--superficie-2); padding: .1em .35em; overflow-wrap: anywhere; }
+.wrap { max-width: var(--container); margin: 0 auto; padding-inline: var(--gutter); }
+.rotulo { font: var(--tipo-rotulo); letter-spacing: var(--tracking-rotulo); color: var(--texto-2); }
+.legenda { font: var(--tipo-legenda); color: var(--texto-2); }
+.so-escuro { display: none; }
+@media (prefers-color-scheme: dark) { :root:not([data-tema="claro"]) .so-claro { display: none; } :root:not([data-tema="claro"]) .so-escuro { display: block; } }
+[data-tema="escuro"] .so-claro { display: none; } [data-tema="escuro"] .so-escuro { display: block; }
+
+/* topo */
+.topo { border-bottom: 1px solid var(--linha); }
+.topo .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; padding-block: 16px; }
+.topo svg { width: 160px; height: auto; display: block; }
+.seg { display: inline-flex; border: 1px solid var(--borda-campo); }
+.seg button { font: 500 14px/1 var(--fonte-texto); background: transparent; color: var(--texto-2); border: 0; padding: 0 14px; min-height: 40px; min-width: 44px; cursor: pointer; transition: background-color var(--dur-base) var(--ease-padrao), color var(--dur-base) var(--ease-padrao), transform var(--dur-rapida) var(--ease-padrao); }
+.seg button + button { border-left: 1px solid var(--linha); }
+.seg button:active { transform: scale(.97); }
+.seg button[aria-pressed="true"] { background: var(--texto); color: var(--fundo); }
+@media (hover: hover) and (pointer: fine) { .seg button[aria-pressed="false"]:hover { color: var(--texto); background: var(--superficie-2); } }
+
+/* abertura */
+.abertura { padding-block: var(--esp-12) var(--esp-10); }
+.abertura h1 { font: var(--tipo-display); font-size: clamp(2.5rem, 5.2vw, 4.5rem); letter-spacing: var(--tracking-display); margin-top: var(--esp-5); max-width: 18ch; }
+.lead { font: 400 1.3125rem/2rem var(--fonte-texto); color: var(--texto-2); max-width: 40ch; margin-top: var(--esp-6); }
+.feito { margin-top: var(--esp-5); color: var(--texto-2); max-width: 52ch; }
+.figura-abertura { margin-top: var(--esp-10); }
+
+/* seções */
+section.bloco { padding-block: var(--secao) 0; }
+section.bloco:last-of-type { padding-bottom: var(--secao); }
+.cab { max-width: var(--container-texto); }
+.cab h2 { font: var(--tipo-t1); letter-spacing: var(--tracking-t); margin-top: var(--esp-4); }
+.cab p { margin-top: var(--esp-5); color: var(--texto-2); max-width: var(--medida); }
+@media (max-width: 768px) { .cab h2 { font: var(--tipo-t2); } }
+.corpo { margin-top: var(--esp-9); }
+
+/* papéis */
+.papeis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--linha-forte); }
+.papel { padding: var(--esp-6) var(--esp-6) 0 0; }
+.papel + .papel { padding-left: var(--esp-6); border-left: 1px solid var(--linha); }
+.papel h3 { font: var(--tipo-t3); font-family: var(--fonte-display); letter-spacing: var(--tracking-t3); margin-top: var(--esp-3); }
+.papel p { margin-top: var(--esp-4); color: var(--texto-2); }
+@media (max-width: 1024px) { .papeis { grid-template-columns: repeat(2, minmax(0, 1fr)); } .papel:nth-child(3) { padding-left: 0; border-left: 0; } .papel:nth-child(n+3) { margin-top: var(--esp-7); } }
+@media (max-width: 560px) { .papeis { grid-template-columns: minmax(0, 1fr); } .papel, .papel + .papel { padding-left: 0; border-left: 0; } .papel + .papel { margin-top: var(--esp-7); } }
+
+/* passos */
+.passos { counter-reset: p; max-width: var(--container-texto); margin-top: var(--esp-9); }
+.passos li { counter-increment: p; display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: var(--esp-5); padding-block: var(--esp-5); border-top: 1px solid var(--linha); }
+.passos li::before { content: counter(p); font: var(--tipo-rotulo); font-size: 1.0625rem; color: var(--texto-2); padding-top: 2px; font-variant-numeric: tabular-nums; }
+.passos strong { font-weight: 700; }
+
+/* regras */
+.regras { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 var(--esp-9); max-width: 960px; }
+.regras li { padding-block: var(--esp-5); border-top: 1px solid var(--linha); }
+.regras h3 { font: var(--tipo-titulo-comp); font-weight: 700; }
+.regras p { margin-top: var(--esp-2); color: var(--texto-2); }
+@media (max-width: 768px) { .regras { grid-template-columns: minmax(0, 1fr); } }
+
+/* perguntas e tabela */
+.perguntas { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--esp-6); }
+.perguntas li { border-top: 1px solid var(--linha-forte); padding-top: var(--esp-5); }
+.perguntas .n { font: var(--tipo-numero); color: var(--texto-2); font-variant-numeric: tabular-nums; }
+.perguntas h3 { font: var(--tipo-titulo-comp); font-weight: 700; margin-top: var(--esp-4); }
+.perguntas p { margin-top: var(--esp-2); color: var(--texto-2); }
+@media (max-width: 1024px) { .perguntas { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 480px) { .perguntas { grid-template-columns: minmax(0, 1fr); } }
+.tabela { margin-top: var(--esp-10); overflow-x: auto; max-width: 960px; }
+table { border-collapse: collapse; width: 100%; min-width: 560px; }
+th, td { text-align: left; padding: var(--celula-py) var(--celula-px) var(--celula-py) 0; border-bottom: 1px solid var(--linha); vertical-align: top; }
+th { font: var(--tipo-rotulo); letter-spacing: var(--tracking-rotulo); color: var(--texto-2); border-bottom-color: var(--linha-forte); }
+td:nth-child(3) { font-family: var(--fonte-mono); font-size: .875rem; }
+.tag { display: inline-block; font: 500 .8125rem/1.25rem var(--fonte-texto); border: 1px solid var(--linha-forte); padding: 2px 8px; white-space: nowrap; }
+.tag.topo-faixa { border-color: var(--texto); }
+.nota { margin-top: var(--esp-6); max-width: var(--container-texto); color: var(--texto-2); }
+
+/* descoberta */
+.descoberta { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--esp-6); }
+.fonte { background: var(--superficie); border: 1px solid var(--linha); padding: var(--card-p); }
+.fonte h3 { font: var(--tipo-titulo-comp); font-weight: 700; margin-top: var(--esp-3); }
+.fonte p { margin-top: var(--esp-3); color: var(--texto-2); }
+.fonte code { display: inline-block; margin-top: var(--esp-4); }
+@media (max-width: 900px) { .descoberta { grid-template-columns: minmax(0, 1fr); } }
+.citacao { font: var(--tipo-citacao); max-width: 34ch; margin-top: var(--esp-9); }
+
+/* seu sim */
+.sim { max-width: var(--container-texto); }
+.sim li { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: var(--esp-4); padding-block: var(--esp-4); border-top: 1px solid var(--linha); }
+.sim svg { width: 20px; height: 20px; margin-top: 4px; }
+
+/* uso */
+.codigo { background: #131721; color: #F5F5F5; border: 1px solid var(--linha); display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 16px 16px 24px; max-width: var(--container-texto); }
+.codigo code { background: none; padding: 0; font: var(--tipo-codigo); font-size: 1rem; color: inherit; }
+.copiar { font: 500 14px/1 var(--fonte-texto); color: #F5F5F5; background: transparent; border: 1px solid rgba(245,245,245,.5); min-height: 40px; padding: 0 16px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: transform var(--dur-rapida) var(--ease-padrao), background-color var(--dur-base), color var(--dur-base), border-color var(--dur-base); }
+.copiar svg { width: 16px; height: 16px; }
+.copiar:active { transform: scale(.97); }
+.copiar.ok { background: #8CC793; color: #131721; border-color: #8CC793; }
+@media (hover: hover) and (pointer: fine) { .copiar:not(.ok):hover { border-color: #F5F5F5; } }
+.uso { margin-top: var(--esp-7); max-width: var(--container-texto); }
+.uso li { padding-block: var(--esp-4); border-top: 1px solid var(--linha); }
+
+/* rodapé */
+footer { border-top: 1px solid var(--linha); }
+footer .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding-block: var(--esp-7); }
+footer svg { width: 160px; height: auto; display: block; }
+.so-leitor { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+svg.traco text { font: 400 15px var(--fonte-detalhe); fill: var(--texto-2); }
+
+/* diagrama do caminho */
+.fluxo { overflow-x: auto; }
+.fluxo svg { display: block; width: 100%; min-width: 680px; height: auto; }
+.fluxo path { fill: none; stroke: var(--texto); stroke-linecap: round; }
+.f-main { stroke-width: 4; }
+.f-ramo { stroke-width: 2; }
+.f-leitura { stroke-dasharray: 6 6; }
+.f-fecha { stroke-width: 2; }
+.f-no { fill: var(--fundo); stroke: var(--texto); stroke-width: 2; }
+.f-junta { fill: var(--texto); }
+.f-fim { fill: var(--destaque); }
+.fluxo text { font: 400 16px var(--fonte-detalhe); fill: var(--texto-2); }
+.fluxo text.f-forte { font-weight: 500; fill: var(--texto); }
+
+/* versão que convence */
+.acoes { margin-top: var(--esp-8); }
+.botao { display: inline-flex; align-items: center; min-height: var(--controle-h); padding: 0 var(--controle-px); background: var(--acao); color: var(--acao-texto); font: 500 1rem/1 var(--fonte-texto); text-decoration: none; outline: 1px solid transparent; outline-offset: 0; transition: background-color var(--dur-rapida) var(--ease-padrao), outline-offset var(--dur-base) var(--ease-padrao), outline-color var(--dur-base), transform var(--dur-rapida) var(--ease-padrao); }
+.botao:active { transform: scale(.97); }
+@media (hover: hover) and (pointer: fine) { .botao:hover { background: var(--acao-hover); outline-color: var(--acao); outline-offset: 3px; } }
+.problemas { max-width: var(--container-texto); }
+.problemas li { padding-block: var(--esp-5); border-top: 1px solid var(--linha); font: 400 1.25rem/2rem var(--fonte-texto); }
+.ganhos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--esp-9); }
+.ganho { border-top: 1px solid var(--linha-forte); padding-top: var(--esp-6); }
+.ganho h3 { font: var(--tipo-t3); font-family: var(--fonte-display); letter-spacing: var(--tracking-t3); }
+.ganho p { margin-top: var(--esp-4); color: var(--texto-2); }
+@media (max-width: 900px) { .ganhos { grid-template-columns: minmax(0, 1fr); gap: var(--esp-8); } }
+details summary { cursor: pointer; font: 500 1rem/1.5rem var(--fonte-texto); padding-block: var(--esp-4); list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+details summary::-webkit-details-marker { display: none; }
+details summary::after { content: "+"; font-family: var(--fonte-detalhe); font-size: 1.25rem; color: var(--texto-2); }
+details[open] summary::after { content: "–"; }
+.ganho details { margin-top: var(--esp-5); border-top: 1px solid var(--linha); }
+.ganho .tabela { margin-top: var(--esp-3); }
+.ganho table { min-width: 0; }
+.faq { max-width: var(--container-texto); }
+.faq details { border-top: 1px solid var(--linha); }
+.faq details:last-child { border-bottom: 1px solid var(--linha); }
+.faq details p { padding-bottom: var(--esp-5); color: var(--texto-2); }
+.pendente { border: 1px dashed var(--linha-forte); padding: var(--esp-5); color: var(--texto-2); max-width: var(--container-texto); font: var(--tipo-texto-ui); }
+.fecho .uso { margin: 0 0 var(--esp-6); counter-reset: u; }
+.fecho .uso li { counter-increment: u; display: grid; grid-template-columns: 32px minmax(0,1fr); }
+.fecho .uso li::before { content: counter(u); font: var(--tipo-rotulo); color: var(--texto-2); padding-top: 4px; }
+.fecho .pendente { margin-top: var(--esp-5); }
+.convite { font: var(--tipo-citacao); margin-top: var(--esp-9); max-width: 34ch; }
+</style>
+</head>
+<body>
+
+<header class="topo"><div class="wrap">
+  <a href="#inicio" aria-label="BALISON">
+    <span class="so-claro"><svg xmlns="http://www.w3.org/2000/svg" class="lockup-svg" viewBox="0 0 680.700 256" aria-hidden="true" focusable="false" aria-label="BALISON assinatura horizontal"><g><g class="camada-mao" style="animation:none"><g class="hachura" fill="#2347B0"><path d="M42.1 36.7L43.4 35.9L44.7 34.9L45.8 33.8L46.8 32.6L47.9 31.5L48.9 30.4L47.7 29.1L46.5 30.1L45.3 31.1L44.2 32.2L43.2 33.3L42.1 34.4L41.2 35.7Z"/><path d="M42.4 46.9L43.9 45.6L45.4 44.2L46.8 42.8L48.2 41.4L49.6 39.9L50.8 38.2L49.7 37.2L48.1 38.4L46.6 39.8L45.2 41.3L43.8 42.7L42.5 44.2L41.2 45.8Z"/><path d="M42.4 56.9L44.0 55.6L45.4 54.2L46.8 52.9L48.3 51.4L49.6 49.8L50.9 48.2L49.6 47.1L48.2 48.6L46.8 50.0L45.3 51.3L43.8 52.6L42.4 54.2L41.2 55.8Z"/><path d="M42.3 66.9L43.9 65.6L45.4 64.3L46.9 62.9L48.4 61.5L49.7 59.8L50.8 58.1L49.7 57.2L48.1 58.5L46.8 59.9L45.4 61.4L43.9 62.7L42.5 64.2L41.2 65.8Z"/><path d="M42.4 76.9L43.9 75.6L45.3 74.2L46.9 72.9L48.3 71.5L49.6 69.9L50.9 68.3L49.8 67.3L48.3 68.6L46.8 70.0L45.3 71.2L43.8 72.6L42.4 74.2L41.1 75.7Z"/><path d="M42.3 86.9L43.8 85.6L45.4 84.2L46.9 82.9L48.3 81.4L49.6 79.8L50.8 78.2L49.6 77.1L48.1 78.5L46.7 79.9L45.2 81.2L43.9 82.7L42.5 84.1L41.1 85.6Z"/><path d="M42.3 96.9L43.9 95.7L45.5 94.4L46.9 92.9L48.3 91.4L49.6 89.9L50.8 88.2L49.6 87.1L48.1 88.4L46.6 89.8L45.2 91.3L43.9 92.7L42.5 94.2L41.3 95.8Z"/><path d="M42.3 159.9L43.6 159.0L44.8 158.0L46.0 157.0L47.1 155.9L48.1 154.6L48.9 153.2L47.7 152.2L46.4 153.2L45.3 154.2L44.3 155.3L43.3 156.5L42.3 157.6L41.3 158.8Z"/><path d="M42.3 169.9L43.9 168.6L45.3 167.2L46.8 165.8L48.2 164.4L49.6 162.9L50.9 161.4L49.8 160.2L48.3 161.6L46.8 162.9L45.3 164.3L43.8 165.6L42.4 167.1L41.1 168.7Z"/><path d="M42.2 179.8L43.9 178.7L45.5 177.4L46.8 175.8L48.2 174.3L49.5 172.8L50.8 171.2L49.7 170.2L48.2 171.5L46.7 172.9L45.3 174.4L43.9 175.7L42.4 177.1L41.1 178.6Z"/><path d="M42.2 189.8L43.9 188.7L45.5 187.4L46.9 185.9L48.3 184.4L49.6 182.9L50.9 181.3L49.8 180.2L48.2 181.5L46.7 182.9L45.3 184.3L43.8 185.7L42.4 187.1L41.2 188.7Z"/><path d="M42.2 199.8L43.9 198.6L45.4 197.3L46.9 195.9L48.3 194.4L49.6 192.9L50.9 191.3L49.8 190.3L48.3 191.6L46.8 193.0L45.4 194.4L43.9 195.7L42.5 197.1L41.2 198.7Z"/><path d="M42.3 209.9L43.9 208.7L45.5 207.4L47.0 206.0L48.4 204.5L49.7 202.9L50.8 201.1L49.7 200.2L48.1 201.5L46.7 202.9L45.2 204.2L43.9 205.7L42.5 207.2L41.2 208.8Z"/><path d="M42.4 219.9L43.9 218.6L45.4 217.3L46.9 215.9L48.2 214.4L49.6 212.9L50.9 211.4L49.8 210.2L48.2 211.5L46.7 212.8L45.2 214.1L43.8 215.6L42.4 217.2L41.2 218.8Z"/><path d="M45.2 226.8L46.3 226.1L47.4 225.3L48.4 224.4L49.2 223.3L50.0 222.3L50.8 221.2L49.8 220.2L48.7 221.0L47.7 221.9L46.7 222.7L45.8 223.6L44.9 224.5L44.1 225.6Z"/></g><g fill="#131721"><path d="M36.1 20.0L35.9 23.8L35.6 27.5L35.3 31.3L35.0 35.1L34.7 39.0L34.5 42.8L34.3 46.7L34.1 50.5L33.9 54.3L33.7 58.2L33.7 62.0L33.7 65.8L33.7 69.6L33.8 73.5L33.9 77.3L34.1 81.2L34.3 85.0L34.6 88.9L34.9 92.7L35.3 96.5L35.6 100.3L35.9 104.0L40.9 103.9L41.0 100.1L41.1 96.2L41.0 92.4L41.0 88.6L40.9 84.8L40.9 81.0L40.8 77.2L40.9 73.4L41.0 69.6L41.0 65.8L41.1 62.0L41.0 58.2L41.0 54.4L40.8 50.6L40.7 46.8L40.7 43.0L40.8 39.2L40.8 35.4L40.9 31.6L41.0 27.7L40.9 23.9L40.7 20.0Z"/><path d="M52.2 25.0L52.1 28.6L51.9 32.2L51.7 35.7L51.5 39.3L51.4 42.9L51.3 46.5L51.2 50.1L51.2 53.8L51.3 57.4L51.3 60.9L51.3 64.5L51.4 68.1L51.4 71.7L51.4 75.3L51.3 78.9L51.3 82.5L51.4 86.1L51.6 89.6L51.8 93.2L52.0 96.8L52.2 100.4L52.4 104.0L56.2 104.0L56.4 100.4L56.6 96.8L56.8 93.2L57.0 89.6L57.1 86.0L57.2 82.5L57.2 78.9L57.2 75.3L57.2 71.7L57.2 68.1L57.1 64.5L57.1 60.9L57.0 57.3L56.9 53.7L56.9 50.1L56.9 46.6L56.8 43.0L56.8 39.4L56.8 35.8L56.7 32.2L56.5 28.6L56.4 25.0Z"/><path d="M36.0 105.1L36.9 105.3L37.9 105.4L38.8 105.5L39.7 105.6L40.6 105.6L41.5 105.7L42.4 105.7L43.3 105.8L44.2 105.9L45.2 105.9L46.1 105.9L47.0 105.8L47.9 105.8L48.8 105.8L49.6 105.8L50.5 105.7L51.3 105.7L52.2 105.6L53.2 105.5L54.1 105.3L55.0 105.2L56.0 105.0L56.0 101.3L55.1 101.1L54.3 100.9L53.4 100.6L52.5 100.4L51.6 100.2L50.6 100.1L49.6 100.1L48.7 100.1L47.7 100.1L46.8 100.1L45.9 100.2L45.0 100.2L44.1 100.3L43.3 100.4L42.4 100.4L41.4 100.5L40.5 100.6L39.6 100.7L38.7 100.8L37.8 101.0L36.9 101.1L36.0 101.3Z"/><path d="M36.0 148.0L35.8 152.0L35.6 156.0L35.3 160.0L35.0 163.9L34.8 168.0L34.7 172.0L34.6 176.0L34.6 180.0L34.6 184.1L34.7 188.1L34.7 192.1L34.8 196.0L34.8 200.0L34.9 204.0L34.9 208.0L34.8 211.9L34.8 215.9L34.8 219.9L34.9 223.9L35.1 227.9L35.2 232.0L35.4 236.0L40.2 236.0L40.4 232.0L40.8 228.1L41.1 224.1L41.5 220.1L41.8 216.1L42.0 212.1L42.1 208.0L42.2 204.0L42.2 200.0L42.2 196.0L42.1 191.9L42.0 187.9L41.9 183.9L41.9 180.0L41.8 176.0L41.7 172.0L41.7 168.0L41.6 164.0L41.4 160.0L41.2 156.0L41.0 152.0L40.8 148.0Z"/><path d="M51.8 148.0L51.6 151.8L51.5 155.5L51.3 159.3L51.2 163.1L51.1 166.9L51.0 170.6L51.0 174.4L51.0 178.2L51.0 181.9L51.0 185.7L51.0 189.5L51.0 193.3L51.0 197.1L51.1 200.8L51.1 204.6L51.1 208.4L51.2 212.1L51.2 215.9L51.2 219.7L51.3 223.4L51.4 227.2L51.6 231.0L55.9 231.0L56.1 227.2L56.2 223.5L56.3 219.7L56.4 215.9L56.5 212.2L56.6 208.4L56.6 204.6L56.6 200.8L56.6 197.0L56.6 193.3L56.6 189.5L56.6 185.7L56.7 182.0L56.7 178.2L56.7 174.4L56.7 170.6L56.7 166.9L56.6 163.1L56.4 159.3L56.3 155.5L56.1 151.8L55.9 148.0Z"/><path d="M36.0 150.6L36.9 150.8L37.9 151.0L38.8 151.1L39.7 151.1L40.6 151.2L41.5 151.2L42.4 151.2L43.2 151.2L44.1 151.2L45.0 151.2L45.9 151.3L46.8 151.3L47.7 151.4L48.7 151.4L49.6 151.5L50.5 151.5L51.4 151.4L52.3 151.4L53.2 151.4L54.1 151.4L55.1 151.3L56.0 151.1L56.0 147.0L55.1 146.8L54.2 146.7L53.3 146.6L52.4 146.6L51.5 146.6L50.6 146.5L49.7 146.5L48.8 146.5L47.9 146.5L47.0 146.4L46.1 146.4L45.2 146.3L44.3 146.3L43.3 146.2L42.3 146.2L41.4 146.2L40.5 146.3L39.6 146.4L38.7 146.6L37.8 146.7L36.9 146.9L36.0 147.1Z"/><path d="M29.0 29.3L33.8 29.4L38.5 29.5L43.2 29.5L47.9 29.4L52.5 29.3L57.2 29.3L61.8 29.2L66.5 29.2L71.1 29.2L75.8 29.2L80.5 29.3L85.1 29.3L89.8 29.3L94.5 29.2L99.2 29.1L103.9 29.1L108.5 29.1L113.2 29.1L117.9 29.0L122.6 29.0L127.3 28.9L132.0 28.7L132.0 24.0L127.3 23.8L122.7 23.6L118.0 23.3L113.3 23.1L108.6 23.0L103.9 22.8L99.2 22.7L94.6 22.6L89.9 22.5L85.2 22.4L80.5 22.3L75.8 22.2L71.1 22.2L66.4 22.3L61.7 22.4L57.0 22.5L52.3 22.8L47.6 23.1L42.9 23.4L38.3 23.8L33.6 24.1L29.0 24.4Z"/><path d="M54.0 36.3L57.5 36.5L61.0 36.6L64.5 36.8L67.9 36.9L71.5 37.0L75.0 37.1L78.5 37.3L82.0 37.4L85.5 37.5L89.0 37.5L92.5 37.6L96.0 37.5L99.5 37.5L103.0 37.3L106.5 37.2L110.0 37.1L113.5 37.1L117.0 37.0L120.5 37.0L124.0 37.0L127.5 36.9L131.0 36.7L131.0 33.3L127.5 33.2L124.0 33.2L120.5 33.2L117.0 33.3L113.5 33.3L110.0 33.2L106.5 33.2L103.0 33.1L99.5 33.1L96.0 33.0L92.5 33.0L89.0 33.0L85.5 33.1L82.0 33.1L78.5 33.2L75.0 33.2L71.5 33.2L68.1 33.2L64.6 33.1L61.0 33.0L57.5 33.0L54.0 33.1Z"/><path d="M128.3 24.5L128.2 25.0L128.0 25.5L127.8 26.0L127.7 26.6L127.5 27.1L127.4 27.7L127.4 28.4L127.3 29.0L127.3 29.6L127.3 30.2L127.3 30.8L127.3 31.3L127.4 31.9L127.5 32.4L127.6 32.9L127.7 33.5L127.7 34.0L127.8 34.6L127.9 35.2L128.0 35.7L128.1 36.2L128.2 36.8L131.0 36.8L131.2 36.2L131.3 35.7L131.4 35.1L131.4 34.5L131.5 34.0L131.5 33.4L131.6 32.8L131.6 32.3L131.7 31.7L131.7 31.1L131.7 30.5L131.6 30.0L131.6 29.5L131.5 29.0L131.5 28.5L131.5 28.0L131.5 27.4L131.4 26.9L131.3 26.3L131.3 25.7L131.1 25.1L131.0 24.5Z"/><path d="M29.0 232.1L33.9 232.3L38.8 232.6L43.8 232.9L48.7 233.1L53.7 233.3L58.7 233.5L63.6 233.6L68.6 233.6L73.5 233.6L78.5 233.6L83.5 233.6L88.4 233.7L93.4 233.7L98.4 233.6L103.3 233.5L108.3 233.4L113.3 233.3L118.3 233.1L123.2 232.9L128.2 232.7L133.1 232.5L138.0 232.3L138.0 227.4L133.0 227.3L128.0 227.3L123.1 227.3L118.1 227.4L113.2 227.5L108.2 227.5L103.3 227.5L98.4 227.4L93.4 227.4L88.5 227.3L83.5 227.2L78.6 227.1L73.6 227.0L68.7 226.9L63.7 226.8L58.8 226.7L53.9 226.7L48.9 226.6L44.0 226.5L39.0 226.5L34.0 226.5L29.0 226.7Z"/><path d="M54.0 222.9L57.8 223.0L61.6 223.1L65.3 223.2L69.1 223.3L72.9 223.4L76.6 223.4L80.4 223.4L84.2 223.4L88.0 223.4L91.8 223.3L95.6 223.3L99.3 223.2L103.1 223.1L106.8 223.0L110.6 222.9L114.3 222.9L118.1 222.9L121.9 222.9L125.7 222.9L129.4 222.9L133.2 222.9L137.0 222.8L137.0 219.5L133.3 219.3L129.5 219.2L125.7 219.1L121.9 218.9L118.2 218.8L114.4 218.7L110.6 218.6L106.8 218.6L103.0 218.5L99.2 218.5L95.4 218.6L91.7 218.7L87.9 218.8L84.2 218.8L80.4 218.9L76.6 218.9L72.9 218.9L69.1 219.0L65.3 219.1L61.5 219.2L57.8 219.4L54.0 219.5Z"/><path d="M134.1 219.2L133.9 219.8L133.8 220.3L133.7 220.9L133.6 221.4L133.5 222.0L133.5 222.5L133.4 223.1L133.4 223.6L133.4 224.2L133.4 224.8L133.4 225.4L133.4 225.9L133.5 226.5L133.5 227.1L133.6 227.6L133.7 228.2L133.7 228.8L133.8 229.3L133.9 229.9L134.0 230.4L134.1 231.0L134.3 231.5L137.0 231.5L137.2 230.9L137.3 230.3L137.3 229.8L137.4 229.2L137.4 228.6L137.5 228.1L137.5 227.5L137.6 227.0L137.6 226.4L137.6 225.9L137.7 225.3L137.7 224.8L137.7 224.2L137.7 223.7L137.6 223.1L137.6 222.6L137.6 222.0L137.5 221.5L137.4 220.9L137.3 220.3L137.2 219.8L137.0 219.2Z"/></g><g fill="#131721"><path d="M128.0 28.5L132.4 28.6L136.7 28.9L140.7 29.4L144.6 30.1L148.3 30.9L151.8 31.9L155.1 33.0L158.2 34.3L161.1 35.7L163.9 37.3L166.6 39.0L169.0 40.7L171.3 42.6L173.5 44.6L175.5 46.7L177.2 48.9L178.9 51.2L180.3 53.7L181.5 56.3L182.5 59.0L183.4 61.8L184.0 64.6L184.5 67.6L184.8 70.7L185.0 73.8L185.1 77.0L184.9 80.0L184.5 82.9L183.7 85.7L182.7 88.3L181.4 90.9L179.7 93.4L177.8 95.8L175.5 98.1L172.9 100.3L169.9 102.4L166.6 104.5L163.0 106.5L159.0 108.4L154.6 110.2L149.9 111.9L144.9 113.6L139.4 115.1L133.6 116.5L127.4 117.9L120.9 119.2L114.0 120.5L106.8 121.6L99.1 122.6L91.1 123.5L82.7 124.2L73.9 124.7L74.1 128.5L83.0 128.1L91.5 127.6L99.6 126.8L107.3 126.0L114.7 125.0L121.7 123.9L128.4 122.7L134.7 121.4L140.7 120.0L146.3 118.6L151.6 117.0L156.6 115.2L161.2 113.4L165.5 111.4L169.4 109.2L173.0 107.0L176.2 104.5L179.2 102.0L181.7 99.3L184.0 96.4L185.8 93.5L187.4 90.4L188.5 87.2L189.4 83.9L189.9 80.5L190.0 77.0L190.0 73.6L189.8 70.3L189.5 67.0L189.0 63.7L188.3 60.5L187.4 57.4L186.3 54.3L185.0 51.3L183.4 48.4L181.5 45.7L179.5 43.2L177.2 40.8L174.8 38.6L172.2 36.5L169.4 34.6L166.5 32.8L163.4 31.2L160.2 29.7L156.7 28.4L153.1 27.3L149.4 26.3L145.4 25.6L141.3 25.0L137.0 24.6L132.6 24.4L128.0 24.4Z"/><path d="M73.9 128.4L83.1 128.9L92.0 129.6L100.5 130.3L108.6 131.1L116.3 132.1L123.6 133.2L130.6 134.4L137.2 135.7L143.4 137.2L149.2 138.7L154.7 140.4L159.8 142.1L164.5 144.0L168.9 146.0L172.9 148.0L176.5 150.2L179.7 152.5L182.6 154.9L185.2 157.3L187.4 159.9L189.3 162.6L190.9 165.4L192.2 168.3L193.1 171.4L193.7 174.6L193.9 178.0L193.8 181.3L193.5 184.5L193.0 187.6L192.3 190.6L191.4 193.6L190.4 196.4L189.2 199.2L187.8 201.8L186.3 204.4L184.6 206.8L182.7 209.1L180.7 211.4L178.5 213.5L176.2 215.5L173.6 217.4L170.9 219.1L168.0 220.7L164.9 222.2L161.7 223.4L158.2 224.5L154.6 225.5L150.8 226.2L146.9 226.8L142.7 227.3L138.5 227.6L134.0 227.7L134.0 231.4L138.6 231.3L143.0 231.2L147.3 230.8L151.5 230.3L155.5 229.6L159.4 228.7L163.1 227.6L166.7 226.3L170.0 224.8L173.2 223.1L176.2 221.2L179.1 219.2L181.7 217.1L184.2 214.7L186.4 212.3L188.5 209.7L190.4 207.0L192.1 204.2L193.6 201.3L195.0 198.3L196.1 195.1L197.1 191.9L197.8 188.6L198.4 185.1L198.7 181.6L198.8 178.0L198.6 174.1L198.0 170.3L197.0 166.6L195.6 163.1L193.8 159.8L191.6 156.6L189.1 153.6L186.3 150.8L183.1 148.1L179.6 145.5L175.6 143.1L171.4 140.8L166.7 138.8L161.7 136.9L156.4 135.1L150.7 133.5L144.7 131.9L138.3 130.5L131.5 129.3L124.4 128.1L116.9 127.1L109.1 126.3L100.9 125.5L92.3 124.9L83.4 124.4L74.1 124.1Z"/></g></g><path class="ponto-alvo" fill="#2347B0" d="M 216 207.5 C 222.8 207.3, 227.8 212.8, 227.5 219.3 C 227.2 225.4, 222.0 230.7, 215.6 230.3 C 209.6 229.9, 204.3 224.7, 204.7 218.7 C 205.1 212.8, 210.3 207.7, 216 207.5 Z"/></g><g fill="#131721"><path transform="translate(262.000 151) scale(0.068 -0.068)" d="M456 0 414 133H181L139 0H20L247 680H353L581 0ZM246 341 215 243H379L348 341L298 513Z"/><path transform="translate(312.388 151) scale(0.068 -0.068)" d="M486 115V0H94V680H214V115Z"/><path transform="translate(356.384 151) scale(0.068 -0.068)" d="M214 0H94V680H214Z"/><path transform="translate(386.848 151) scale(0.068 -0.068)" d="M242 101Q358 101 358 187Q358 222 340.5 242.0Q323 262 276 277L194 304Q47 352 47 497Q47 581 99.5 635.5Q152 690 264 690Q311 690 357.0 679.5Q403 669 455 646L418 543Q370 562 336.5 570.5Q303 579 268 579Q222 579 195.5 562.5Q169 546 169 503Q169 471 187.5 450.5Q206 430 249 416L331 389Q405 364 442.5 316.5Q480 269 480 191Q480 101 423.0 45.5Q366 -10 244 -10Q196 -10 144.5 1.5Q93 13 32 41L69 144Q125 120 164.5 110.5Q204 101 242 101Z"/><path transform="translate(431.592 151) scale(0.068 -0.068)" d="M575 412V269Q575 139 510.0 64.5Q445 -10 320 -10Q194 -10 129.5 64.5Q65 139 65 269V412Q65 542 129.5 616.0Q194 690 320 690Q445 690 510.0 616.0Q575 542 575 412ZM452 412Q452 494 420.0 535.5Q388 577 320 577Q252 577 220.0 535.5Q188 494 188 412V269Q188 187 220.0 145.0Q252 103 320 103Q388 103 420.0 145.0Q452 187 452 269Z"/><path transform="translate(484.632 151) scale(0.068 -0.068)" d="M94 0V680H204Q283 577 354.0 462.5Q425 348 483 227L474 430V680H589V0H479Q415 126 346.5 253.5Q278 381 201 494L209 260V0Z"/></g></svg></span>
+    <span class="so-escuro"><svg xmlns="http://www.w3.org/2000/svg" class="lockup-svg" viewBox="0 0 680.700 256" aria-hidden="true" focusable="false" aria-label="BALISON assinatura horizontal"><g><g class="camada-mao" style="animation:none"><g class="hachura" fill="#90A7E9"><path d="M42.1 36.7L43.4 35.9L44.7 34.9L45.8 33.8L46.8 32.6L47.9 31.5L48.9 30.4L47.7 29.1L46.5 30.1L45.3 31.1L44.2 32.2L43.2 33.3L42.1 34.4L41.2 35.7Z"/><path d="M42.4 46.9L43.9 45.6L45.4 44.2L46.8 42.8L48.2 41.4L49.6 39.9L50.8 38.2L49.7 37.2L48.1 38.4L46.6 39.8L45.2 41.3L43.8 42.7L42.5 44.2L41.2 45.8Z"/><path d="M42.4 56.9L44.0 55.6L45.4 54.2L46.8 52.9L48.3 51.4L49.6 49.8L50.9 48.2L49.6 47.1L48.2 48.6L46.8 50.0L45.3 51.3L43.8 52.6L42.4 54.2L41.2 55.8Z"/><path d="M42.3 66.9L43.9 65.6L45.4 64.3L46.9 62.9L48.4 61.5L49.7 59.8L50.8 58.1L49.7 57.2L48.1 58.5L46.8 59.9L45.4 61.4L43.9 62.7L42.5 64.2L41.2 65.8Z"/><path d="M42.4 76.9L43.9 75.6L45.3 74.2L46.9 72.9L48.3 71.5L49.6 69.9L50.9 68.3L49.8 67.3L48.3 68.6L46.8 70.0L45.3 71.2L43.8 72.6L42.4 74.2L41.1 75.7Z"/><path d="M42.3 86.9L43.8 85.6L45.4 84.2L46.9 82.9L48.3 81.4L49.6 79.8L50.8 78.2L49.6 77.1L48.1 78.5L46.7 79.9L45.2 81.2L43.9 82.7L42.5 84.1L41.1 85.6Z"/><path d="M42.3 96.9L43.9 95.7L45.5 94.4L46.9 92.9L48.3 91.4L49.6 89.9L50.8 88.2L49.6 87.1L48.1 88.4L46.6 89.8L45.2 91.3L43.9 92.7L42.5 94.2L41.3 95.8Z"/><path d="M42.3 159.9L43.6 159.0L44.8 158.0L46.0 157.0L47.1 155.9L48.1 154.6L48.9 153.2L47.7 152.2L46.4 153.2L45.3 154.2L44.3 155.3L43.3 156.5L42.3 157.6L41.3 158.8Z"/><path d="M42.3 169.9L43.9 168.6L45.3 167.2L46.8 165.8L48.2 164.4L49.6 162.9L50.9 161.4L49.8 160.2L48.3 161.6L46.8 162.9L45.3 164.3L43.8 165.6L42.4 167.1L41.1 168.7Z"/><path d="M42.2 179.8L43.9 178.7L45.5 177.4L46.8 175.8L48.2 174.3L49.5 172.8L50.8 171.2L49.7 170.2L48.2 171.5L46.7 172.9L45.3 174.4L43.9 175.7L42.4 177.1L41.1 178.6Z"/><path d="M42.2 189.8L43.9 188.7L45.5 187.4L46.9 185.9L48.3 184.4L49.6 182.9L50.9 181.3L49.8 180.2L48.2 181.5L46.7 182.9L45.3 184.3L43.8 185.7L42.4 187.1L41.2 188.7Z"/><path d="M42.2 199.8L43.9 198.6L45.4 197.3L46.9 195.9L48.3 194.4L49.6 192.9L50.9 191.3L49.8 190.3L48.3 191.6L46.8 193.0L45.4 194.4L43.9 195.7L42.5 197.1L41.2 198.7Z"/><path d="M42.3 209.9L43.9 208.7L45.5 207.4L47.0 206.0L48.4 204.5L49.7 202.9L50.8 201.1L49.7 200.2L48.1 201.5L46.7 202.9L45.2 204.2L43.9 205.7L42.5 207.2L41.2 208.8Z"/><path d="M42.4 219.9L43.9 218.6L45.4 217.3L46.9 215.9L48.2 214.4L49.6 212.9L50.9 211.4L49.8 210.2L48.2 211.5L46.7 212.8L45.2 214.1L43.8 215.6L42.4 217.2L41.2 218.8Z"/><path d="M45.2 226.8L46.3 226.1L47.4 225.3L48.4 224.4L49.2 223.3L50.0 222.3L50.8 221.2L49.8 220.2L48.7 221.0L47.7 221.9L46.7 222.7L45.8 223.6L44.9 224.5L44.1 225.6Z"/></g><g fill="#F5F5F5"><path d="M36.2 20.0L36.0 23.8L35.8 27.5L35.5 31.3L35.2 35.1L34.9 39.0L34.7 42.8L34.5 46.7L34.3 50.5L34.1 54.3L34.0 58.2L33.9 62.0L33.9 65.8L33.9 69.6L34.0 73.5L34.1 77.3L34.3 81.2L34.5 85.0L34.8 88.9L35.1 92.7L35.4 96.5L35.7 100.3L36.0 104.0L40.8 103.9L40.9 100.1L40.9 96.2L40.9 92.4L40.8 88.6L40.7 84.8L40.6 81.0L40.6 77.2L40.7 73.4L40.7 69.6L40.8 65.8L40.8 62.0L40.8 58.2L40.7 54.4L40.6 50.6L40.5 46.8L40.5 43.0L40.6 39.2L40.7 35.4L40.8 31.6L40.8 27.7L40.8 23.9L40.6 20.0Z"/><path d="M52.3 25.0L52.2 28.6L52.0 32.2L51.9 35.7L51.7 39.3L51.5 42.9L51.4 46.5L51.4 50.1L51.4 53.8L51.4 57.4L51.5 60.9L51.5 64.5L51.5 68.1L51.5 71.7L51.5 75.3L51.5 78.9L51.5 82.5L51.6 86.1L51.7 89.6L51.9 93.2L52.1 96.8L52.3 100.4L52.5 104.0L56.1 104.0L56.3 100.4L56.5 96.8L56.7 93.2L56.9 89.6L57.0 86.0L57.0 82.5L57.1 78.9L57.1 75.3L57.0 71.7L57.0 68.1L56.9 64.5L56.9 60.9L56.8 57.3L56.8 53.7L56.7 50.1L56.7 46.6L56.7 43.0L56.7 39.4L56.6 35.8L56.5 32.2L56.4 28.6L56.2 25.0Z"/><path d="M36.0 105.0L36.9 105.1L37.8 105.3L38.8 105.4L39.7 105.4L40.6 105.5L41.5 105.5L42.4 105.6L43.3 105.7L44.2 105.7L45.2 105.7L46.1 105.7L47.0 105.7L47.9 105.6L48.8 105.6L49.6 105.6L50.5 105.6L51.3 105.5L52.2 105.5L53.2 105.3L54.1 105.2L55.1 105.0L56.0 104.9L56.0 101.4L55.1 101.2L54.3 101.0L53.4 100.8L52.5 100.6L51.6 100.4L50.6 100.3L49.6 100.2L48.7 100.2L47.7 100.3L46.8 100.3L45.9 100.3L45.0 100.4L44.1 100.5L43.3 100.5L42.4 100.6L41.4 100.7L40.5 100.8L39.6 100.8L38.7 101.0L37.8 101.1L36.9 101.2L36.0 101.4Z"/><path d="M36.2 148.0L36.0 152.0L35.8 156.0L35.5 160.0L35.2 164.0L35.0 168.0L34.9 172.0L34.9 176.0L34.8 180.0L34.8 184.1L34.9 188.1L34.9 192.1L35.0 196.0L35.1 200.0L35.1 204.0L35.1 208.0L35.1 211.9L35.0 215.9L35.0 219.9L35.1 223.9L35.2 227.9L35.4 232.0L35.6 236.0L40.0 236.0L40.3 232.0L40.6 228.1L41.0 224.1L41.3 220.1L41.6 216.1L41.8 212.1L41.9 208.0L42.0 204.0L42.0 200.0L42.0 196.0L41.9 191.9L41.8 187.9L41.7 184.0L41.6 180.0L41.6 176.0L41.5 172.0L41.5 168.0L41.4 164.0L41.2 160.0L41.1 156.0L40.9 152.0L40.6 148.0Z"/><path d="M52.0 148.0L51.8 151.8L51.6 155.5L51.5 159.3L51.3 163.1L51.2 166.9L51.2 170.6L51.2 174.4L51.2 178.2L51.2 181.9L51.2 185.7L51.2 189.5L51.2 193.3L51.2 197.1L51.2 200.8L51.3 204.6L51.3 208.4L51.3 212.1L51.3 215.9L51.4 219.7L51.4 223.4L51.5 227.2L51.7 231.0L55.8 231.0L56.0 227.2L56.1 223.5L56.2 219.7L56.3 215.9L56.4 212.2L56.4 208.4L56.5 204.6L56.5 200.8L56.4 197.0L56.4 193.3L56.4 189.5L56.5 185.7L56.5 182.0L56.5 178.2L56.6 174.4L56.6 170.6L56.5 166.9L56.4 163.1L56.3 159.3L56.1 155.5L56.0 151.8L55.8 148.0Z"/><path d="M36.0 150.5L36.9 150.7L37.9 150.8L38.8 150.9L39.7 151.0L40.6 151.1L41.5 151.1L42.4 151.1L43.3 151.1L44.1 151.1L45.0 151.1L45.9 151.1L46.8 151.2L47.7 151.2L48.7 151.3L49.6 151.3L50.5 151.3L51.4 151.3L52.3 151.3L53.2 151.3L54.1 151.3L55.1 151.2L56.0 151.0L56.0 147.1L55.1 147.0L54.2 146.8L53.3 146.8L52.4 146.8L51.5 146.7L50.6 146.6L49.7 146.6L48.8 146.6L47.9 146.6L47.0 146.6L46.1 146.5L45.2 146.5L44.3 146.4L43.3 146.4L42.3 146.3L41.4 146.4L40.5 146.5L39.6 146.6L38.7 146.7L37.8 146.9L36.9 147.0L36.0 147.2Z"/><path d="M29.0 29.2L33.7 29.3L38.5 29.3L43.2 29.3L47.8 29.2L52.5 29.1L57.2 29.1L61.8 29.0L66.5 29.0L71.1 29.0L75.8 29.0L80.5 29.1L85.1 29.1L89.8 29.1L94.5 29.0L99.2 28.9L103.9 28.9L108.5 28.9L113.2 28.9L117.9 28.8L122.6 28.8L127.3 28.7L132.0 28.6L132.0 24.2L127.3 24.0L122.7 23.7L118.0 23.5L113.3 23.3L108.6 23.1L103.9 23.0L99.2 22.9L94.6 22.8L89.9 22.7L85.2 22.6L80.5 22.5L75.8 22.5L71.1 22.5L66.4 22.5L61.7 22.6L57.0 22.7L52.3 23.0L47.6 23.2L42.9 23.6L38.3 23.9L33.6 24.3L29.0 24.5Z"/><path d="M54.0 36.2L57.5 36.4L61.0 36.5L64.5 36.7L68.0 36.8L71.5 36.9L75.0 37.0L78.5 37.1L82.0 37.2L85.5 37.3L89.0 37.4L92.5 37.4L96.0 37.4L99.5 37.3L103.0 37.2L106.5 37.1L110.0 37.0L113.5 36.9L117.0 36.9L120.5 36.9L124.0 36.8L127.5 36.8L131.0 36.6L131.0 33.4L127.5 33.3L124.0 33.3L120.5 33.3L117.0 33.4L113.5 33.4L110.0 33.4L106.5 33.3L103.0 33.3L99.5 33.2L96.0 33.1L92.5 33.1L89.0 33.1L85.5 33.2L82.0 33.3L78.5 33.3L75.0 33.4L71.5 33.3L68.1 33.3L64.6 33.2L61.0 33.1L57.5 33.1L54.0 33.2Z"/><path d="M128.4 24.5L128.3 25.0L128.1 25.5L127.9 26.0L127.8 26.6L127.6 27.2L127.6 27.8L127.5 28.4L127.4 29.0L127.4 29.6L127.4 30.2L127.4 30.8L127.5 31.3L127.6 31.9L127.6 32.4L127.7 32.9L127.8 33.5L127.8 34.0L127.9 34.6L128.0 35.2L128.1 35.7L128.2 36.2L128.3 36.8L130.9 36.8L131.1 36.2L131.2 35.7L131.2 35.1L131.3 34.5L131.4 34.0L131.4 33.4L131.4 32.8L131.5 32.3L131.5 31.7L131.5 31.1L131.5 30.5L131.5 30.0L131.5 29.5L131.4 29.0L131.4 28.5L131.4 28.0L131.3 27.4L131.3 26.9L131.2 26.3L131.2 25.7L131.0 25.1L130.9 24.5Z"/><path d="M29.0 231.9L33.9 232.2L38.8 232.4L43.8 232.7L48.7 232.9L53.7 233.1L58.7 233.3L63.6 233.4L68.6 233.4L73.5 233.4L78.5 233.4L83.5 233.4L88.4 233.5L93.4 233.5L98.4 233.4L103.3 233.3L108.3 233.2L113.3 233.1L118.2 232.9L123.2 232.7L128.1 232.5L133.1 232.3L138.0 232.1L138.0 227.6L133.0 227.4L128.0 227.4L123.1 227.5L118.1 227.6L113.2 227.7L108.2 227.7L103.3 227.7L98.4 227.6L93.4 227.5L88.5 227.5L83.5 227.4L78.6 227.3L73.6 227.2L68.7 227.1L63.7 227.0L58.8 226.9L53.8 226.9L48.9 226.8L43.9 226.7L39.0 226.7L34.0 226.7L29.0 226.8Z"/><path d="M54.0 222.8L57.8 222.9L61.6 223.0L65.3 223.1L69.1 223.2L72.9 223.2L76.6 223.3L80.4 223.3L84.2 223.3L88.0 223.3L91.8 223.2L95.5 223.1L99.3 223.0L103.1 222.9L106.8 222.8L110.6 222.8L114.3 222.8L118.1 222.8L121.9 222.8L125.7 222.8L129.4 222.8L133.2 222.8L137.0 222.7L137.0 219.6L133.3 219.4L129.5 219.3L125.7 219.2L121.9 219.1L118.2 219.0L114.4 218.9L110.6 218.8L106.8 218.7L103.0 218.6L99.2 218.7L95.5 218.7L91.7 218.8L87.9 218.9L84.2 219.0L80.4 219.0L76.6 219.0L72.9 219.1L69.1 219.1L65.3 219.2L61.5 219.3L57.8 219.5L54.0 219.6Z"/><path d="M134.2 219.2L134.0 219.8L133.9 220.3L133.8 220.9L133.7 221.4L133.6 222.0L133.6 222.5L133.5 223.1L133.5 223.6L133.5 224.2L133.5 224.8L133.5 225.4L133.5 225.9L133.6 226.5L133.6 227.1L133.7 227.6L133.8 228.2L133.9 228.8L133.9 229.3L134.0 229.9L134.1 230.4L134.2 230.9L134.4 231.5L136.9 231.5L137.1 230.9L137.2 230.3L137.2 229.8L137.3 229.2L137.3 228.6L137.3 228.1L137.4 227.5L137.4 227.0L137.5 226.4L137.5 225.9L137.5 225.3L137.5 224.8L137.5 224.2L137.5 223.7L137.5 223.1L137.5 222.6L137.5 222.0L137.4 221.5L137.3 220.9L137.2 220.3L137.1 219.8L136.9 219.2Z"/></g><g fill="#F5F5F5"><path d="M128.0 28.3L132.4 28.5L136.7 28.8L140.7 29.3L144.6 29.9L148.3 30.8L151.8 31.8L155.1 32.9L158.2 34.2L161.2 35.6L164.0 37.2L166.6 38.8L169.1 40.6L171.4 42.5L173.6 44.5L175.6 46.6L177.4 48.8L179.0 51.2L180.4 53.6L181.6 56.2L182.7 58.9L183.5 61.7L184.2 64.6L184.6 67.6L185.0 70.7L185.2 73.8L185.2 77.0L185.1 80.0L184.6 82.9L183.9 85.7L182.8 88.4L181.5 91.0L179.9 93.5L177.9 95.9L175.6 98.2L173.0 100.4L170.0 102.6L166.7 104.7L163.1 106.6L159.1 108.6L154.7 110.4L150.0 112.1L144.9 113.7L139.5 115.2L133.6 116.7L127.5 118.1L120.9 119.4L114.0 120.6L106.8 121.7L99.1 122.7L91.1 123.6L82.7 124.3L73.9 124.8L74.1 128.4L83.0 128.0L91.4 127.4L99.6 126.7L107.3 125.8L114.7 124.8L121.7 123.7L128.4 122.5L134.7 121.2L140.6 119.9L146.3 118.4L151.6 116.8L156.5 115.1L161.1 113.2L165.4 111.2L169.3 109.1L172.9 106.8L176.1 104.4L179.1 101.9L181.6 99.2L183.8 96.3L185.7 93.4L187.2 90.3L188.4 87.1L189.2 83.9L189.7 80.5L189.9 77.0L189.8 73.6L189.6 70.3L189.3 67.0L188.8 63.8L188.2 60.6L187.3 57.4L186.2 54.3L184.8 51.4L183.2 48.5L181.4 45.8L179.4 43.3L177.1 40.9L174.7 38.7L172.1 36.6L169.3 34.7L166.4 33.0L163.3 31.4L160.1 29.9L156.7 28.6L153.1 27.4L149.3 26.5L145.4 25.7L141.3 25.1L137.0 24.7L132.6 24.5L128.0 24.5Z"/><path d="M73.9 128.3L83.1 128.8L92.0 129.4L100.5 130.2L108.6 131.0L116.3 132.0L123.7 133.1L130.6 134.3L137.2 135.6L143.4 137.0L149.3 138.6L154.8 140.2L159.9 142.0L164.6 143.8L169.0 145.8L173.0 147.9L176.6 150.1L179.8 152.3L182.7 154.7L185.3 157.2L187.5 159.8L189.5 162.5L191.1 165.3L192.4 168.2L193.3 171.3L193.8 174.6L194.0 178.0L193.9 181.3L193.6 184.5L193.1 187.6L192.4 190.7L191.6 193.6L190.5 196.5L189.3 199.2L187.9 201.9L186.4 204.4L184.7 206.9L182.9 209.2L180.8 211.5L178.6 213.6L176.2 215.6L173.7 217.5L171.0 219.2L168.1 220.8L165.0 222.3L161.7 223.6L158.3 224.7L154.6 225.6L150.9 226.3L146.9 226.9L142.8 227.4L138.5 227.7L134.0 227.8L134.0 231.2L138.6 231.2L143.0 231.0L147.3 230.7L151.5 230.2L155.5 229.5L159.3 228.6L163.1 227.5L166.6 226.2L170.0 224.7L173.1 223.0L176.2 221.1L179.0 219.1L181.6 217.0L184.0 214.6L186.3 212.2L188.4 209.6L190.3 206.9L192.0 204.1L193.5 201.2L194.8 198.2L196.0 195.1L196.9 191.9L197.7 188.5L198.2 185.1L198.6 181.6L198.7 178.0L198.5 174.1L197.9 170.3L196.8 166.7L195.4 163.2L193.6 159.9L191.5 156.7L189.0 153.7L186.2 150.9L183.0 148.2L179.5 145.6L175.6 143.2L171.3 141.0L166.6 138.9L161.7 137.0L156.3 135.3L150.7 133.6L144.6 132.1L138.2 130.7L131.5 129.4L124.4 128.3L116.9 127.3L109.1 126.4L100.9 125.7L92.3 125.1L83.4 124.6L74.1 124.2Z"/></g></g><path class="ponto-alvo" fill="#90A7E9" d="M 216 207.5 C 222.8 207.3, 227.8 212.8, 227.5 219.3 C 227.2 225.4, 222.0 230.7, 215.6 230.3 C 209.6 229.9, 204.3 224.7, 204.7 218.7 C 205.1 212.8, 210.3 207.7, 216 207.5 Z"/></g><g fill="#F5F5F5"><path transform="translate(262.000 151) scale(0.068 -0.068)" d="M456 0 414 133H181L139 0H20L247 680H353L581 0ZM246 341 215 243H379L348 341L298 513Z"/><path transform="translate(312.388 151) scale(0.068 -0.068)" d="M486 115V0H94V680H214V115Z"/><path transform="translate(356.384 151) scale(0.068 -0.068)" d="M214 0H94V680H214Z"/><path transform="translate(386.848 151) scale(0.068 -0.068)" d="M242 101Q358 101 358 187Q358 222 340.5 242.0Q323 262 276 277L194 304Q47 352 47 497Q47 581 99.5 635.5Q152 690 264 690Q311 690 357.0 679.5Q403 669 455 646L418 543Q370 562 336.5 570.5Q303 579 268 579Q222 579 195.5 562.5Q169 546 169 503Q169 471 187.5 450.5Q206 430 249 416L331 389Q405 364 442.5 316.5Q480 269 480 191Q480 101 423.0 45.5Q366 -10 244 -10Q196 -10 144.5 1.5Q93 13 32 41L69 144Q125 120 164.5 110.5Q204 101 242 101Z"/><path transform="translate(431.592 151) scale(0.068 -0.068)" d="M575 412V269Q575 139 510.0 64.5Q445 -10 320 -10Q194 -10 129.5 64.5Q65 139 65 269V412Q65 542 129.5 616.0Q194 690 320 690Q445 690 510.0 616.0Q575 542 575 412ZM452 412Q452 494 420.0 535.5Q388 577 320 577Q252 577 220.0 535.5Q188 494 188 412V269Q188 187 220.0 145.0Q252 103 320 103Q388 103 420.0 145.0Q452 187 452 269Z"/><path transform="translate(484.632 151) scale(0.068 -0.068)" d="M94 0V680H204Q283 577 354.0 462.5Q425 348 483 227L474 430V680H589V0H479Q415 126 346.5 253.5Q278 381 201 494L209 260V0Z"/></g></svg></span>
+  </a>
+  <div class="seg" role="group" aria-label="Idioma / Language / Idioma">
+    <button type="button" data-lang="pt" aria-pressed="true" lang="pt-BR">PT</button>
+    <button type="button" data-lang="en" aria-pressed="false" lang="en">EN</button>
+    <button type="button" data-lang="es" aria-pressed="false" lang="es">ES</button>
+  </div>
+</div></header>
+
+<main id="inicio">
+
+<section class="abertura"><div class="wrap">
+  <p class="rotulo" data-t="rotulo"></p>
+  <h1 data-t="titulo"></h1>
+  <p class="lead" data-t="lead"></p>
+  <p class="feito" data-t="feito"></p>
+  <p class="acoes"><a class="botao" href="#comecar" data-t="cta1"></a></p>
+  <figure class="figura-abertura">
+    <svg class="traco" viewBox="20 120 880 150" data-semente="41" role="img" data-t-label="fig1">
+      <line x1="24" y1="260" x2="896" y2="260" data-so="mao" data-peso="1.4"/>
+      <line x1="90" y1="260" x2="90" y2="170" data-figura="notebook" data-peso="1.3"/>
+      <line x1="112" y1="215" x2="250" y2="215"/>
+      <line x1="124" y1="215" x2="124" y2="260"/>
+      <line x1="238" y1="215" x2="238" y2="260"/>
+      <line x1="132" y1="212" x2="196" y2="212" data-peso="1.3"/>
+      <rect x="140" y="180" width="48" height="31" data-peso="1.3"/>
+      <polygon points="114,262 250,262 262,270 126,270" data-hachura="-30 7"/>
+      <polyline points="188,150 188,132 820,132"/>
+      <line x1="460" y1="132" x2="460" y2="160"/>
+      <line x1="640" y1="132" x2="640" y2="160"/>
+      <line x1="820" y1="132" x2="820" y2="160"/>
+      <line x1="400" y1="260" x2="400" y2="190" data-figura="notebook" data-peso="1.1"/>
+      <line x1="418" y1="222" x2="510" y2="222"/>
+      <line x1="428" y1="222" x2="428" y2="260"/>
+      <line x1="500" y1="222" x2="500" y2="260"/>
+      <rect x="440" y="198" width="38" height="22" data-peso="1.1"/>
+      <line x1="580" y1="260" x2="580" y2="190" data-figura="notebook" data-peso="1.1"/>
+      <line x1="598" y1="222" x2="690" y2="222"/>
+      <line x1="608" y1="222" x2="608" y2="260"/>
+      <line x1="680" y1="222" x2="680" y2="260"/>
+      <rect x="620" y="198" width="38" height="22" data-peso="1.1"/>
+      <line x1="760" y1="260" x2="760" y2="190" data-figura="notebook" data-peso="1.1"/>
+      <line x1="778" y1="222" x2="870" y2="222"/>
+      <line x1="788" y1="222" x2="788" y2="260"/>
+      <line x1="860" y1="222" x2="860" y2="260"/>
+      <rect x="800" y="198" width="38" height="22" data-peso="1.1"/>
+    </svg>
+  </figure>
+</div></section>
+
+<section class="bloco" id="problema"><div class="wrap">
+  <div class="cab"><p class="rotulo" data-t="s1_rot"></p><h2 data-t="s1_tit"></h2></div>
+  <ul class="corpo problemas">
+    <li data-t="pr1"></li><li data-t="pr2"></li><li data-t="pr3"></li><li data-t="pr4"></li>
+  </ul>
+</div></section>
+
+<section class="bloco" id="caminho"><div class="wrap">
+  <div class="cab"><p class="rotulo" data-t="s2_rot"></p><h2 data-t="s2_tit"></h2><p data-t="s2_txt"></p></div>
+  <figure class="corpo fluxo" tabindex="0" role="group" data-t-label="fig2">
+    <svg viewBox="0 0 900 330" aria-hidden="true">
+      <path class="f-main" d="M20 70 H860"/>
+      <path class="f-ramo" d="M260 70 C300 70 300 150 340 150 H520 C560 150 560 70 600 70"/>
+      <path class="f-ramo" d="M300 70 C340 70 340 220 380 220 H640 C680 220 680 70 720 70"/>
+      <path class="f-ramo f-leitura" d="M340 70 C380 70 380 290 420 290 H600"/>
+      <circle class="f-no" cx="260" cy="70" r="6"/><circle class="f-no" cx="300" cy="70" r="6"/><circle class="f-no" cx="340" cy="70" r="6"/>
+      <circle class="f-junta" cx="600" cy="70" r="7"/><circle class="f-junta" cx="720" cy="70" r="7"/>
+      <path class="f-fecha" d="M592 282 L608 298 M608 282 L592 298"/>
+      <circle class="f-fim" cx="860" cy="70" r="8"/>
+      <text class="f-forte" x="20" y="48" data-t="f2_main"></text>
+      <text x="300" y="48" text-anchor="middle" data-t="f2_abre"></text>
+      <text x="400" y="140" data-t="f2_w1"></text>
+      <text x="440" y="210" data-t="f2_w2"></text>
+      <text x="460" y="280" data-t="f2_w3"></text>
+      <text x="660" y="48" text-anchor="middle" data-t="f2_junta"></text>
+      <text x="620" y="295" data-t="f2_fecha"></text>
+      <text x="860" y="104" text-anchor="end" class="f-forte" data-t="f2_fim"></text>
+    </svg>
+  </figure>
+  <ol class="passos">
+    <li><p data-t="c1"></p></li><li><p data-t="c2"></p></li><li><p data-t="c3"></p></li><li><p data-t="c4"></p></li>
+  </ol>
+</div></section>
+
+<section class="bloco" id="ganhos"><div class="wrap">
+  <div class="cab"><p class="rotulo" data-t="s3_rot"></p><h2 data-t="s3_tit"></h2></div>
+  <div class="corpo ganhos">
+    <div class="ganho"><h3 data-t="b1_tit"></h3><p data-t="b1_txt"></p></div>
+    <div class="ganho"><h3 data-t="b2_tit"></h3><p data-t="b2_txt"></p>
+      <details><summary data-t="b2_mais"></summary>
+        <div class="tabela" role="region" tabindex="0" data-t-label="tab_label">
+          <table>
+      <thead><tr><th data-t="th1"></th><th data-t="th2"></th><th data-t="th3"></th></tr></thead>
+      <tbody>
+        <tr><td data-t="t1"></td><td><span class="tag" data-t="barato"></span></td><td>low</td></tr>
+        <tr><td data-t="t2"></td><td><span class="tag" data-t="barato"></span></td><td>medium</td></tr>
+        <tr><td data-t="t3"></td><td><span class="tag" data-t="inter"></span></td><td>medium</td></tr>
+        <tr><td data-t="t4"></td><td><span class="tag" data-t="inter"></span></td><td>medium</td></tr>
+        <tr><td data-t="t5"></td><td><span class="tag" data-t="inter"></span></td><td>high</td></tr>
+        <tr><td data-t="t6"></td><td><span class="tag" data-t="inter"></span></td><td>high</td></tr>
+        <tr><td data-t="t7"></td><td><span class="tag" data-t="forte"></span></td><td>high</td></tr>
+        <tr><td data-t="t8"></td><td><span class="tag topo-faixa" data-t="topo"></span></td><td>high</td></tr>
+      </tbody>
+    </table>
+        </div>
+      </details>
+    </div>
+    <div class="ganho"><h3 data-t="b3_tit"></h3><p data-t="b3_txt"></p></div>
+  </div>
+</div></section>
+
+<section class="bloco" id="prova"><div class="wrap">
+  <div class="cab"><p class="rotulo" data-t="s4_rot"></p><h2 data-t="s4_tit"></h2></div>
+  <p class="corpo pendente" data-t="prova_need"></p>
+</div></section>
+
+<section class="bloco" id="duvidas"><div class="wrap">
+  <div class="cab"><p class="rotulo" data-t="s5_rot"></p><h2 data-t="s5_tit"></h2></div>
+  <div class="corpo faq">
+    <details><summary data-t="f1_q"></summary><p data-t="f1_a"></p></details>
+    <details><summary data-t="f2_q"></summary><p data-t="f2_a"></p></details>
+    <details><summary data-t="f3_q"></summary><p data-t="f3_a"></p></details>
+    <details><summary data-t="f4_q"></summary><p data-t="f4_a"></p></details>
+    <details><summary data-t="f5_q"></summary><p data-t="f5_a"></p></details>
+  </div>
+</div></section>
+
+<section class="bloco fecho" id="comecar"><div class="wrap">
+  <div class="cab"><p class="rotulo" data-t="s6_rot"></p><h2 data-t="s6_tit"></h2><p data-t="s6_txt"></p></div>
+  <div class="corpo">
+    <ol class="uso">
+      <li><p data-t="u1"></p></li><li><p data-t="u2"></p></li><li><p data-t="u3"></p></li>
+    </ol>
+    <div class="codigo"><code>/orquestrar</code>
+      <button type="button" class="copiar" data-copiar="/orquestrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-t="copiar"></span></button>
+    </div>
+    <p class="acoes"><a class="botao" href="https://github.com/ba-lison/orca_plugin_orquestrar" data-t="cta2"></a></p>
+    <p class="convite" data-t="convite"></p>
+    <p class="so-leitor" aria-live="polite" id="aviso"></p>
+  </div>
+</div></section>
+
+</main>
+
+<footer><div class="wrap">
+  <span class="so-claro"><svg xmlns="http://www.w3.org/2000/svg" class="lockup-svg" viewBox="0 0 680.700 256" aria-hidden="true" focusable="false" aria-label="BALISON assinatura horizontal"><g><g class="camada-mao" style="animation:none"><g class="hachura" fill="#2347B0"><path d="M42.1 36.7L43.4 35.9L44.7 34.9L45.8 33.8L46.8 32.6L47.9 31.5L48.9 30.4L47.7 29.1L46.5 30.1L45.3 31.1L44.2 32.2L43.2 33.3L42.1 34.4L41.2 35.7Z"/><path d="M42.4 46.9L43.9 45.6L45.4 44.2L46.8 42.8L48.2 41.4L49.6 39.9L50.8 38.2L49.7 37.2L48.1 38.4L46.6 39.8L45.2 41.3L43.8 42.7L42.5 44.2L41.2 45.8Z"/><path d="M42.4 56.9L44.0 55.6L45.4 54.2L46.8 52.9L48.3 51.4L49.6 49.8L50.9 48.2L49.6 47.1L48.2 48.6L46.8 50.0L45.3 51.3L43.8 52.6L42.4 54.2L41.2 55.8Z"/><path d="M42.3 66.9L43.9 65.6L45.4 64.3L46.9 62.9L48.4 61.5L49.7 59.8L50.8 58.1L49.7 57.2L48.1 58.5L46.8 59.9L45.4 61.4L43.9 62.7L42.5 64.2L41.2 65.8Z"/><path d="M42.4 76.9L43.9 75.6L45.3 74.2L46.9 72.9L48.3 71.5L49.6 69.9L50.9 68.3L49.8 67.3L48.3 68.6L46.8 70.0L45.3 71.2L43.8 72.6L42.4 74.2L41.1 75.7Z"/><path d="M42.3 86.9L43.8 85.6L45.4 84.2L46.9 82.9L48.3 81.4L49.6 79.8L50.8 78.2L49.6 77.1L48.1 78.5L46.7 79.9L45.2 81.2L43.9 82.7L42.5 84.1L41.1 85.6Z"/><path d="M42.3 96.9L43.9 95.7L45.5 94.4L46.9 92.9L48.3 91.4L49.6 89.9L50.8 88.2L49.6 87.1L48.1 88.4L46.6 89.8L45.2 91.3L43.9 92.7L42.5 94.2L41.3 95.8Z"/><path d="M42.3 159.9L43.6 159.0L44.8 158.0L46.0 157.0L47.1 155.9L48.1 154.6L48.9 153.2L47.7 152.2L46.4 153.2L45.3 154.2L44.3 155.3L43.3 156.5L42.3 157.6L41.3 158.8Z"/><path d="M42.3 169.9L43.9 168.6L45.3 167.2L46.8 165.8L48.2 164.4L49.6 162.9L50.9 161.4L49.8 160.2L48.3 161.6L46.8 162.9L45.3 164.3L43.8 165.6L42.4 167.1L41.1 168.7Z"/><path d="M42.2 179.8L43.9 178.7L45.5 177.4L46.8 175.8L48.2 174.3L49.5 172.8L50.8 171.2L49.7 170.2L48.2 171.5L46.7 172.9L45.3 174.4L43.9 175.7L42.4 177.1L41.1 178.6Z"/><path d="M42.2 189.8L43.9 188.7L45.5 187.4L46.9 185.9L48.3 184.4L49.6 182.9L50.9 181.3L49.8 180.2L48.2 181.5L46.7 182.9L45.3 184.3L43.8 185.7L42.4 187.1L41.2 188.7Z"/><path d="M42.2 199.8L43.9 198.6L45.4 197.3L46.9 195.9L48.3 194.4L49.6 192.9L50.9 191.3L49.8 190.3L48.3 191.6L46.8 193.0L45.4 194.4L43.9 195.7L42.5 197.1L41.2 198.7Z"/><path d="M42.3 209.9L43.9 208.7L45.5 207.4L47.0 206.0L48.4 204.5L49.7 202.9L50.8 201.1L49.7 200.2L48.1 201.5L46.7 202.9L45.2 204.2L43.9 205.7L42.5 207.2L41.2 208.8Z"/><path d="M42.4 219.9L43.9 218.6L45.4 217.3L46.9 215.9L48.2 214.4L49.6 212.9L50.9 211.4L49.8 210.2L48.2 211.5L46.7 212.8L45.2 214.1L43.8 215.6L42.4 217.2L41.2 218.8Z"/><path d="M45.2 226.8L46.3 226.1L47.4 225.3L48.4 224.4L49.2 223.3L50.0 222.3L50.8 221.2L49.8 220.2L48.7 221.0L47.7 221.9L46.7 222.7L45.8 223.6L44.9 224.5L44.1 225.6Z"/></g><g fill="#131721"><path d="M36.1 20.0L35.9 23.8L35.6 27.5L35.3 31.3L35.0 35.1L34.7 39.0L34.5 42.8L34.3 46.7L34.1 50.5L33.9 54.3L33.7 58.2L33.7 62.0L33.7 65.8L33.7 69.6L33.8 73.5L33.9 77.3L34.1 81.2L34.3 85.0L34.6 88.9L34.9 92.7L35.3 96.5L35.6 100.3L35.9 104.0L40.9 103.9L41.0 100.1L41.1 96.2L41.0 92.4L41.0 88.6L40.9 84.8L40.9 81.0L40.8 77.2L40.9 73.4L41.0 69.6L41.0 65.8L41.1 62.0L41.0 58.2L41.0 54.4L40.8 50.6L40.7 46.8L40.7 43.0L40.8 39.2L40.8 35.4L40.9 31.6L41.0 27.7L40.9 23.9L40.7 20.0Z"/><path d="M52.2 25.0L52.1 28.6L51.9 32.2L51.7 35.7L51.5 39.3L51.4 42.9L51.3 46.5L51.2 50.1L51.2 53.8L51.3 57.4L51.3 60.9L51.3 64.5L51.4 68.1L51.4 71.7L51.4 75.3L51.3 78.9L51.3 82.5L51.4 86.1L51.6 89.6L51.8 93.2L52.0 96.8L52.2 100.4L52.4 104.0L56.2 104.0L56.4 100.4L56.6 96.8L56.8 93.2L57.0 89.6L57.1 86.0L57.2 82.5L57.2 78.9L57.2 75.3L57.2 71.7L57.2 68.1L57.1 64.5L57.1 60.9L57.0 57.3L56.9 53.7L56.9 50.1L56.9 46.6L56.8 43.0L56.8 39.4L56.8 35.8L56.7 32.2L56.5 28.6L56.4 25.0Z"/><path d="M36.0 105.1L36.9 105.3L37.9 105.4L38.8 105.5L39.7 105.6L40.6 105.6L41.5 105.7L42.4 105.7L43.3 105.8L44.2 105.9L45.2 105.9L46.1 105.9L47.0 105.8L47.9 105.8L48.8 105.8L49.6 105.8L50.5 105.7L51.3 105.7L52.2 105.6L53.2 105.5L54.1 105.3L55.0 105.2L56.0 105.0L56.0 101.3L55.1 101.1L54.3 100.9L53.4 100.6L52.5 100.4L51.6 100.2L50.6 100.1L49.6 100.1L48.7 100.1L47.7 100.1L46.8 100.1L45.9 100.2L45.0 100.2L44.1 100.3L43.3 100.4L42.4 100.4L41.4 100.5L40.5 100.6L39.6 100.7L38.7 100.8L37.8 101.0L36.9 101.1L36.0 101.3Z"/><path d="M36.0 148.0L35.8 152.0L35.6 156.0L35.3 160.0L35.0 163.9L34.8 168.0L34.7 172.0L34.6 176.0L34.6 180.0L34.6 184.1L34.7 188.1L34.7 192.1L34.8 196.0L34.8 200.0L34.9 204.0L34.9 208.0L34.8 211.9L34.8 215.9L34.8 219.9L34.9 223.9L35.1 227.9L35.2 232.0L35.4 236.0L40.2 236.0L40.4 232.0L40.8 228.1L41.1 224.1L41.5 220.1L41.8 216.1L42.0 212.1L42.1 208.0L42.2 204.0L42.2 200.0L42.2 196.0L42.1 191.9L42.0 187.9L41.9 183.9L41.9 180.0L41.8 176.0L41.7 172.0L41.7 168.0L41.6 164.0L41.4 160.0L41.2 156.0L41.0 152.0L40.8 148.0Z"/><path d="M51.8 148.0L51.6 151.8L51.5 155.5L51.3 159.3L51.2 163.1L51.1 166.9L51.0 170.6L51.0 174.4L51.0 178.2L51.0 181.9L51.0 185.7L51.0 189.5L51.0 193.3L51.0 197.1L51.1 200.8L51.1 204.6L51.1 208.4L51.2 212.1L51.2 215.9L51.2 219.7L51.3 223.4L51.4 227.2L51.6 231.0L55.9 231.0L56.1 227.2L56.2 223.5L56.3 219.7L56.4 215.9L56.5 212.2L56.6 208.4L56.6 204.6L56.6 200.8L56.6 197.0L56.6 193.3L56.6 189.5L56.6 185.7L56.7 182.0L56.7 178.2L56.7 174.4L56.7 170.6L56.7 166.9L56.6 163.1L56.4 159.3L56.3 155.5L56.1 151.8L55.9 148.0Z"/><path d="M36.0 150.6L36.9 150.8L37.9 151.0L38.8 151.1L39.7 151.1L40.6 151.2L41.5 151.2L42.4 151.2L43.2 151.2L44.1 151.2L45.0 151.2L45.9 151.3L46.8 151.3L47.7 151.4L48.7 151.4L49.6 151.5L50.5 151.5L51.4 151.4L52.3 151.4L53.2 151.4L54.1 151.4L55.1 151.3L56.0 151.1L56.0 147.0L55.1 146.8L54.2 146.7L53.3 146.6L52.4 146.6L51.5 146.6L50.6 146.5L49.7 146.5L48.8 146.5L47.9 146.5L47.0 146.4L46.1 146.4L45.2 146.3L44.3 146.3L43.3 146.2L42.3 146.2L41.4 146.2L40.5 146.3L39.6 146.4L38.7 146.6L37.8 146.7L36.9 146.9L36.0 147.1Z"/><path d="M29.0 29.3L33.8 29.4L38.5 29.5L43.2 29.5L47.9 29.4L52.5 29.3L57.2 29.3L61.8 29.2L66.5 29.2L71.1 29.2L75.8 29.2L80.5 29.3L85.1 29.3L89.8 29.3L94.5 29.2L99.2 29.1L103.9 29.1L108.5 29.1L113.2 29.1L117.9 29.0L122.6 29.0L127.3 28.9L132.0 28.7L132.0 24.0L127.3 23.8L122.7 23.6L118.0 23.3L113.3 23.1L108.6 23.0L103.9 22.8L99.2 22.7L94.6 22.6L89.9 22.5L85.2 22.4L80.5 22.3L75.8 22.2L71.1 22.2L66.4 22.3L61.7 22.4L57.0 22.5L52.3 22.8L47.6 23.1L42.9 23.4L38.3 23.8L33.6 24.1L29.0 24.4Z"/><path d="M54.0 36.3L57.5 36.5L61.0 36.6L64.5 36.8L67.9 36.9L71.5 37.0L75.0 37.1L78.5 37.3L82.0 37.4L85.5 37.5L89.0 37.5L92.5 37.6L96.0 37.5L99.5 37.5L103.0 37.3L106.5 37.2L110.0 37.1L113.5 37.1L117.0 37.0L120.5 37.0L124.0 37.0L127.5 36.9L131.0 36.7L131.0 33.3L127.5 33.2L124.0 33.2L120.5 33.2L117.0 33.3L113.5 33.3L110.0 33.2L106.5 33.2L103.0 33.1L99.5 33.1L96.0 33.0L92.5 33.0L89.0 33.0L85.5 33.1L82.0 33.1L78.5 33.2L75.0 33.2L71.5 33.2L68.1 33.2L64.6 33.1L61.0 33.0L57.5 33.0L54.0 33.1Z"/><path d="M128.3 24.5L128.2 25.0L128.0 25.5L127.8 26.0L127.7 26.6L127.5 27.1L127.4 27.7L127.4 28.4L127.3 29.0L127.3 29.6L127.3 30.2L127.3 30.8L127.3 31.3L127.4 31.9L127.5 32.4L127.6 32.9L127.7 33.5L127.7 34.0L127.8 34.6L127.9 35.2L128.0 35.7L128.1 36.2L128.2 36.8L131.0 36.8L131.2 36.2L131.3 35.7L131.4 35.1L131.4 34.5L131.5 34.0L131.5 33.4L131.6 32.8L131.6 32.3L131.7 31.7L131.7 31.1L131.7 30.5L131.6 30.0L131.6 29.5L131.5 29.0L131.5 28.5L131.5 28.0L131.5 27.4L131.4 26.9L131.3 26.3L131.3 25.7L131.1 25.1L131.0 24.5Z"/><path d="M29.0 232.1L33.9 232.3L38.8 232.6L43.8 232.9L48.7 233.1L53.7 233.3L58.7 233.5L63.6 233.6L68.6 233.6L73.5 233.6L78.5 233.6L83.5 233.6L88.4 233.7L93.4 233.7L98.4 233.6L103.3 233.5L108.3 233.4L113.3 233.3L118.3 233.1L123.2 232.9L128.2 232.7L133.1 232.5L138.0 232.3L138.0 227.4L133.0 227.3L128.0 227.3L123.1 227.3L118.1 227.4L113.2 227.5L108.2 227.5L103.3 227.5L98.4 227.4L93.4 227.4L88.5 227.3L83.5 227.2L78.6 227.1L73.6 227.0L68.7 226.9L63.7 226.8L58.8 226.7L53.9 226.7L48.9 226.6L44.0 226.5L39.0 226.5L34.0 226.5L29.0 226.7Z"/><path d="M54.0 222.9L57.8 223.0L61.6 223.1L65.3 223.2L69.1 223.3L72.9 223.4L76.6 223.4L80.4 223.4L84.2 223.4L88.0 223.4L91.8 223.3L95.6 223.3L99.3 223.2L103.1 223.1L106.8 223.0L110.6 222.9L114.3 222.9L118.1 222.9L121.9 222.9L125.7 222.9L129.4 222.9L133.2 222.9L137.0 222.8L137.0 219.5L133.3 219.3L129.5 219.2L125.7 219.1L121.9 218.9L118.2 218.8L114.4 218.7L110.6 218.6L106.8 218.6L103.0 218.5L99.2 218.5L95.4 218.6L91.7 218.7L87.9 218.8L84.2 218.8L80.4 218.9L76.6 218.9L72.9 218.9L69.1 219.0L65.3 219.1L61.5 219.2L57.8 219.4L54.0 219.5Z"/><path d="M134.1 219.2L133.9 219.8L133.8 220.3L133.7 220.9L133.6 221.4L133.5 222.0L133.5 222.5L133.4 223.1L133.4 223.6L133.4 224.2L133.4 224.8L133.4 225.4L133.4 225.9L133.5 226.5L133.5 227.1L133.6 227.6L133.7 228.2L133.7 228.8L133.8 229.3L133.9 229.9L134.0 230.4L134.1 231.0L134.3 231.5L137.0 231.5L137.2 230.9L137.3 230.3L137.3 229.8L137.4 229.2L137.4 228.6L137.5 228.1L137.5 227.5L137.6 227.0L137.6 226.4L137.6 225.9L137.7 225.3L137.7 224.8L137.7 224.2L137.7 223.7L137.6 223.1L137.6 222.6L137.6 222.0L137.5 221.5L137.4 220.9L137.3 220.3L137.2 219.8L137.0 219.2Z"/></g><g fill="#131721"><path d="M128.0 28.5L132.4 28.6L136.7 28.9L140.7 29.4L144.6 30.1L148.3 30.9L151.8 31.9L155.1 33.0L158.2 34.3L161.1 35.7L163.9 37.3L166.6 39.0L169.0 40.7L171.3 42.6L173.5 44.6L175.5 46.7L177.2 48.9L178.9 51.2L180.3 53.7L181.5 56.3L182.5 59.0L183.4 61.8L184.0 64.6L184.5 67.6L184.8 70.7L185.0 73.8L185.1 77.0L184.9 80.0L184.5 82.9L183.7 85.7L182.7 88.3L181.4 90.9L179.7 93.4L177.8 95.8L175.5 98.1L172.9 100.3L169.9 102.4L166.6 104.5L163.0 106.5L159.0 108.4L154.6 110.2L149.9 111.9L144.9 113.6L139.4 115.1L133.6 116.5L127.4 117.9L120.9 119.2L114.0 120.5L106.8 121.6L99.1 122.6L91.1 123.5L82.7 124.2L73.9 124.7L74.1 128.5L83.0 128.1L91.5 127.6L99.6 126.8L107.3 126.0L114.7 125.0L121.7 123.9L128.4 122.7L134.7 121.4L140.7 120.0L146.3 118.6L151.6 117.0L156.6 115.2L161.2 113.4L165.5 111.4L169.4 109.2L173.0 107.0L176.2 104.5L179.2 102.0L181.7 99.3L184.0 96.4L185.8 93.5L187.4 90.4L188.5 87.2L189.4 83.9L189.9 80.5L190.0 77.0L190.0 73.6L189.8 70.3L189.5 67.0L189.0 63.7L188.3 60.5L187.4 57.4L186.3 54.3L185.0 51.3L183.4 48.4L181.5 45.7L179.5 43.2L177.2 40.8L174.8 38.6L172.2 36.5L169.4 34.6L166.5 32.8L163.4 31.2L160.2 29.7L156.7 28.4L153.1 27.3L149.4 26.3L145.4 25.6L141.3 25.0L137.0 24.6L132.6 24.4L128.0 24.4Z"/><path d="M73.9 128.4L83.1 128.9L92.0 129.6L100.5 130.3L108.6 131.1L116.3 132.1L123.6 133.2L130.6 134.4L137.2 135.7L143.4 137.2L149.2 138.7L154.7 140.4L159.8 142.1L164.5 144.0L168.9 146.0L172.9 148.0L176.5 150.2L179.7 152.5L182.6 154.9L185.2 157.3L187.4 159.9L189.3 162.6L190.9 165.4L192.2 168.3L193.1 171.4L193.7 174.6L193.9 178.0L193.8 181.3L193.5 184.5L193.0 187.6L192.3 190.6L191.4 193.6L190.4 196.4L189.2 199.2L187.8 201.8L186.3 204.4L184.6 206.8L182.7 209.1L180.7 211.4L178.5 213.5L176.2 215.5L173.6 217.4L170.9 219.1L168.0 220.7L164.9 222.2L161.7 223.4L158.2 224.5L154.6 225.5L150.8 226.2L146.9 226.8L142.7 227.3L138.5 227.6L134.0 227.7L134.0 231.4L138.6 231.3L143.0 231.2L147.3 230.8L151.5 230.3L155.5 229.6L159.4 228.7L163.1 227.6L166.7 226.3L170.0 224.8L173.2 223.1L176.2 221.2L179.1 219.2L181.7 217.1L184.2 214.7L186.4 212.3L188.5 209.7L190.4 207.0L192.1 204.2L193.6 201.3L195.0 198.3L196.1 195.1L197.1 191.9L197.8 188.6L198.4 185.1L198.7 181.6L198.8 178.0L198.6 174.1L198.0 170.3L197.0 166.6L195.6 163.1L193.8 159.8L191.6 156.6L189.1 153.6L186.3 150.8L183.1 148.1L179.6 145.5L175.6 143.1L171.4 140.8L166.7 138.8L161.7 136.9L156.4 135.1L150.7 133.5L144.7 131.9L138.3 130.5L131.5 129.3L124.4 128.1L116.9 127.1L109.1 126.3L100.9 125.5L92.3 124.9L83.4 124.4L74.1 124.1Z"/></g></g><path class="ponto-alvo" fill="#2347B0" d="M 216 207.5 C 222.8 207.3, 227.8 212.8, 227.5 219.3 C 227.2 225.4, 222.0 230.7, 215.6 230.3 C 209.6 229.9, 204.3 224.7, 204.7 218.7 C 205.1 212.8, 210.3 207.7, 216 207.5 Z"/></g><g fill="#131721"><path transform="translate(262.000 151) scale(0.068 -0.068)" d="M456 0 414 133H181L139 0H20L247 680H353L581 0ZM246 341 215 243H379L348 341L298 513Z"/><path transform="translate(312.388 151) scale(0.068 -0.068)" d="M486 115V0H94V680H214V115Z"/><path transform="translate(356.384 151) scale(0.068 -0.068)" d="M214 0H94V680H214Z"/><path transform="translate(386.848 151) scale(0.068 -0.068)" d="M242 101Q358 101 358 187Q358 222 340.5 242.0Q323 262 276 277L194 304Q47 352 47 497Q47 581 99.5 635.5Q152 690 264 690Q311 690 357.0 679.5Q403 669 455 646L418 543Q370 562 336.5 570.5Q303 579 268 579Q222 579 195.5 562.5Q169 546 169 503Q169 471 187.5 450.5Q206 430 249 416L331 389Q405 364 442.5 316.5Q480 269 480 191Q480 101 423.0 45.5Q366 -10 244 -10Q196 -10 144.5 1.5Q93 13 32 41L69 144Q125 120 164.5 110.5Q204 101 242 101Z"/><path transform="translate(431.592 151) scale(0.068 -0.068)" d="M575 412V269Q575 139 510.0 64.5Q445 -10 320 -10Q194 -10 129.5 64.5Q65 139 65 269V412Q65 542 129.5 616.0Q194 690 320 690Q445 690 510.0 616.0Q575 542 575 412ZM452 412Q452 494 420.0 535.5Q388 577 320 577Q252 577 220.0 535.5Q188 494 188 412V269Q188 187 220.0 145.0Q252 103 320 103Q388 103 420.0 145.0Q452 187 452 269Z"/><path transform="translate(484.632 151) scale(0.068 -0.068)" d="M94 0V680H204Q283 577 354.0 462.5Q425 348 483 227L474 430V680H589V0H479Q415 126 346.5 253.5Q278 381 201 494L209 260V0Z"/></g></svg></span>
+  <span class="so-escuro"><svg xmlns="http://www.w3.org/2000/svg" class="lockup-svg" viewBox="0 0 680.700 256" aria-hidden="true" focusable="false" aria-label="BALISON assinatura horizontal"><g><g class="camada-mao" style="animation:none"><g class="hachura" fill="#90A7E9"><path d="M42.1 36.7L43.4 35.9L44.7 34.9L45.8 33.8L46.8 32.6L47.9 31.5L48.9 30.4L47.7 29.1L46.5 30.1L45.3 31.1L44.2 32.2L43.2 33.3L42.1 34.4L41.2 35.7Z"/><path d="M42.4 46.9L43.9 45.6L45.4 44.2L46.8 42.8L48.2 41.4L49.6 39.9L50.8 38.2L49.7 37.2L48.1 38.4L46.6 39.8L45.2 41.3L43.8 42.7L42.5 44.2L41.2 45.8Z"/><path d="M42.4 56.9L44.0 55.6L45.4 54.2L46.8 52.9L48.3 51.4L49.6 49.8L50.9 48.2L49.6 47.1L48.2 48.6L46.8 50.0L45.3 51.3L43.8 52.6L42.4 54.2L41.2 55.8Z"/><path d="M42.3 66.9L43.9 65.6L45.4 64.3L46.9 62.9L48.4 61.5L49.7 59.8L50.8 58.1L49.7 57.2L48.1 58.5L46.8 59.9L45.4 61.4L43.9 62.7L42.5 64.2L41.2 65.8Z"/><path d="M42.4 76.9L43.9 75.6L45.3 74.2L46.9 72.9L48.3 71.5L49.6 69.9L50.9 68.3L49.8 67.3L48.3 68.6L46.8 70.0L45.3 71.2L43.8 72.6L42.4 74.2L41.1 75.7Z"/><path d="M42.3 86.9L43.8 85.6L45.4 84.2L46.9 82.9L48.3 81.4L49.6 79.8L50.8 78.2L49.6 77.1L48.1 78.5L46.7 79.9L45.2 81.2L43.9 82.7L42.5 84.1L41.1 85.6Z"/><path d="M42.3 96.9L43.9 95.7L45.5 94.4L46.9 92.9L48.3 91.4L49.6 89.9L50.8 88.2L49.6 87.1L48.1 88.4L46.6 89.8L45.2 91.3L43.9 92.7L42.5 94.2L41.3 95.8Z"/><path d="M42.3 159.9L43.6 159.0L44.8 158.0L46.0 157.0L47.1 155.9L48.1 154.6L48.9 153.2L47.7 152.2L46.4 153.2L45.3 154.2L44.3 155.3L43.3 156.5L42.3 157.6L41.3 158.8Z"/><path d="M42.3 169.9L43.9 168.6L45.3 167.2L46.8 165.8L48.2 164.4L49.6 162.9L50.9 161.4L49.8 160.2L48.3 161.6L46.8 162.9L45.3 164.3L43.8 165.6L42.4 167.1L41.1 168.7Z"/><path d="M42.2 179.8L43.9 178.7L45.5 177.4L46.8 175.8L48.2 174.3L49.5 172.8L50.8 171.2L49.7 170.2L48.2 171.5L46.7 172.9L45.3 174.4L43.9 175.7L42.4 177.1L41.1 178.6Z"/><path d="M42.2 189.8L43.9 188.7L45.5 187.4L46.9 185.9L48.3 184.4L49.6 182.9L50.9 181.3L49.8 180.2L48.2 181.5L46.7 182.9L45.3 184.3L43.8 185.7L42.4 187.1L41.2 188.7Z"/><path d="M42.2 199.8L43.9 198.6L45.4 197.3L46.9 195.9L48.3 194.4L49.6 192.9L50.9 191.3L49.8 190.3L48.3 191.6L46.8 193.0L45.4 194.4L43.9 195.7L42.5 197.1L41.2 198.7Z"/><path d="M42.3 209.9L43.9 208.7L45.5 207.4L47.0 206.0L48.4 204.5L49.7 202.9L50.8 201.1L49.7 200.2L48.1 201.5L46.7 202.9L45.2 204.2L43.9 205.7L42.5 207.2L41.2 208.8Z"/><path d="M42.4 219.9L43.9 218.6L45.4 217.3L46.9 215.9L48.2 214.4L49.6 212.9L50.9 211.4L49.8 210.2L48.2 211.5L46.7 212.8L45.2 214.1L43.8 215.6L42.4 217.2L41.2 218.8Z"/><path d="M45.2 226.8L46.3 226.1L47.4 225.3L48.4 224.4L49.2 223.3L50.0 222.3L50.8 221.2L49.8 220.2L48.7 221.0L47.7 221.9L46.7 222.7L45.8 223.6L44.9 224.5L44.1 225.6Z"/></g><g fill="#F5F5F5"><path d="M36.2 20.0L36.0 23.8L35.8 27.5L35.5 31.3L35.2 35.1L34.9 39.0L34.7 42.8L34.5 46.7L34.3 50.5L34.1 54.3L34.0 58.2L33.9 62.0L33.9 65.8L33.9 69.6L34.0 73.5L34.1 77.3L34.3 81.2L34.5 85.0L34.8 88.9L35.1 92.7L35.4 96.5L35.7 100.3L36.0 104.0L40.8 103.9L40.9 100.1L40.9 96.2L40.9 92.4L40.8 88.6L40.7 84.8L40.6 81.0L40.6 77.2L40.7 73.4L40.7 69.6L40.8 65.8L40.8 62.0L40.8 58.2L40.7 54.4L40.6 50.6L40.5 46.8L40.5 43.0L40.6 39.2L40.7 35.4L40.8 31.6L40.8 27.7L40.8 23.9L40.6 20.0Z"/><path d="M52.3 25.0L52.2 28.6L52.0 32.2L51.9 35.7L51.7 39.3L51.5 42.9L51.4 46.5L51.4 50.1L51.4 53.8L51.4 57.4L51.5 60.9L51.5 64.5L51.5 68.1L51.5 71.7L51.5 75.3L51.5 78.9L51.5 82.5L51.6 86.1L51.7 89.6L51.9 93.2L52.1 96.8L52.3 100.4L52.5 104.0L56.1 104.0L56.3 100.4L56.5 96.8L56.7 93.2L56.9 89.6L57.0 86.0L57.0 82.5L57.1 78.9L57.1 75.3L57.0 71.7L57.0 68.1L56.9 64.5L56.9 60.9L56.8 57.3L56.8 53.7L56.7 50.1L56.7 46.6L56.7 43.0L56.7 39.4L56.6 35.8L56.5 32.2L56.4 28.6L56.2 25.0Z"/><path d="M36.0 105.0L36.9 105.1L37.8 105.3L38.8 105.4L39.7 105.4L40.6 105.5L41.5 105.5L42.4 105.6L43.3 105.7L44.2 105.7L45.2 105.7L46.1 105.7L47.0 105.7L47.9 105.6L48.8 105.6L49.6 105.6L50.5 105.6L51.3 105.5L52.2 105.5L53.2 105.3L54.1 105.2L55.1 105.0L56.0 104.9L56.0 101.4L55.1 101.2L54.3 101.0L53.4 100.8L52.5 100.6L51.6 100.4L50.6 100.3L49.6 100.2L48.7 100.2L47.7 100.3L46.8 100.3L45.9 100.3L45.0 100.4L44.1 100.5L43.3 100.5L42.4 100.6L41.4 100.7L40.5 100.8L39.6 100.8L38.7 101.0L37.8 101.1L36.9 101.2L36.0 101.4Z"/><path d="M36.2 148.0L36.0 152.0L35.8 156.0L35.5 160.0L35.2 164.0L35.0 168.0L34.9 172.0L34.9 176.0L34.8 180.0L34.8 184.1L34.9 188.1L34.9 192.1L35.0 196.0L35.1 200.0L35.1 204.0L35.1 208.0L35.1 211.9L35.0 215.9L35.0 219.9L35.1 223.9L35.2 227.9L35.4 232.0L35.6 236.0L40.0 236.0L40.3 232.0L40.6 228.1L41.0 224.1L41.3 220.1L41.6 216.1L41.8 212.1L41.9 208.0L42.0 204.0L42.0 200.0L42.0 196.0L41.9 191.9L41.8 187.9L41.7 184.0L41.6 180.0L41.6 176.0L41.5 172.0L41.5 168.0L41.4 164.0L41.2 160.0L41.1 156.0L40.9 152.0L40.6 148.0Z"/><path d="M52.0 148.0L51.8 151.8L51.6 155.5L51.5 159.3L51.3 163.1L51.2 166.9L51.2 170.6L51.2 174.4L51.2 178.2L51.2 181.9L51.2 185.7L51.2 189.5L51.2 193.3L51.2 197.1L51.2 200.8L51.3 204.6L51.3 208.4L51.3 212.1L51.3 215.9L51.4 219.7L51.4 223.4L51.5 227.2L51.7 231.0L55.8 231.0L56.0 227.2L56.1 223.5L56.2 219.7L56.3 215.9L56.4 212.2L56.4 208.4L56.5 204.6L56.5 200.8L56.4 197.0L56.4 193.3L56.4 189.5L56.5 185.7L56.5 182.0L56.5 178.2L56.6 174.4L56.6 170.6L56.5 166.9L56.4 163.1L56.3 159.3L56.1 155.5L56.0 151.8L55.8 148.0Z"/><path d="M36.0 150.5L36.9 150.7L37.9 150.8L38.8 150.9L39.7 151.0L40.6 151.1L41.5 151.1L42.4 151.1L43.3 151.1L44.1 151.1L45.0 151.1L45.9 151.1L46.8 151.2L47.7 151.2L48.7 151.3L49.6 151.3L50.5 151.3L51.4 151.3L52.3 151.3L53.2 151.3L54.1 151.3L55.1 151.2L56.0 151.0L56.0 147.1L55.1 147.0L54.2 146.8L53.3 146.8L52.4 146.8L51.5 146.7L50.6 146.6L49.7 146.6L48.8 146.6L47.9 146.6L47.0 146.6L46.1 146.5L45.2 146.5L44.3 146.4L43.3 146.4L42.3 146.3L41.4 146.4L40.5 146.5L39.6 146.6L38.7 146.7L37.8 146.9L36.9 147.0L36.0 147.2Z"/><path d="M29.0 29.2L33.7 29.3L38.5 29.3L43.2 29.3L47.8 29.2L52.5 29.1L57.2 29.1L61.8 29.0L66.5 29.0L71.1 29.0L75.8 29.0L80.5 29.1L85.1 29.1L89.8 29.1L94.5 29.0L99.2 28.9L103.9 28.9L108.5 28.9L113.2 28.9L117.9 28.8L122.6 28.8L127.3 28.7L132.0 28.6L132.0 24.2L127.3 24.0L122.7 23.7L118.0 23.5L113.3 23.3L108.6 23.1L103.9 23.0L99.2 22.9L94.6 22.8L89.9 22.7L85.2 22.6L80.5 22.5L75.8 22.5L71.1 22.5L66.4 22.5L61.7 22.6L57.0 22.7L52.3 23.0L47.6 23.2L42.9 23.6L38.3 23.9L33.6 24.3L29.0 24.5Z"/><path d="M54.0 36.2L57.5 36.4L61.0 36.5L64.5 36.7L68.0 36.8L71.5 36.9L75.0 37.0L78.5 37.1L82.0 37.2L85.5 37.3L89.0 37.4L92.5 37.4L96.0 37.4L99.5 37.3L103.0 37.2L106.5 37.1L110.0 37.0L113.5 36.9L117.0 36.9L120.5 36.9L124.0 36.8L127.5 36.8L131.0 36.6L131.0 33.4L127.5 33.3L124.0 33.3L120.5 33.3L117.0 33.4L113.5 33.4L110.0 33.4L106.5 33.3L103.0 33.3L99.5 33.2L96.0 33.1L92.5 33.1L89.0 33.1L85.5 33.2L82.0 33.3L78.5 33.3L75.0 33.4L71.5 33.3L68.1 33.3L64.6 33.2L61.0 33.1L57.5 33.1L54.0 33.2Z"/><path d="M128.4 24.5L128.3 25.0L128.1 25.5L127.9 26.0L127.8 26.6L127.6 27.2L127.6 27.8L127.5 28.4L127.4 29.0L127.4 29.6L127.4 30.2L127.4 30.8L127.5 31.3L127.6 31.9L127.6 32.4L127.7 32.9L127.8 33.5L127.8 34.0L127.9 34.6L128.0 35.2L128.1 35.7L128.2 36.2L128.3 36.8L130.9 36.8L131.1 36.2L131.2 35.7L131.2 35.1L131.3 34.5L131.4 34.0L131.4 33.4L131.4 32.8L131.5 32.3L131.5 31.7L131.5 31.1L131.5 30.5L131.5 30.0L131.5 29.5L131.4 29.0L131.4 28.5L131.4 28.0L131.3 27.4L131.3 26.9L131.2 26.3L131.2 25.7L131.0 25.1L130.9 24.5Z"/><path d="M29.0 231.9L33.9 232.2L38.8 232.4L43.8 232.7L48.7 232.9L53.7 233.1L58.7 233.3L63.6 233.4L68.6 233.4L73.5 233.4L78.5 233.4L83.5 233.4L88.4 233.5L93.4 233.5L98.4 233.4L103.3 233.3L108.3 233.2L113.3 233.1L118.2 232.9L123.2 232.7L128.1 232.5L133.1 232.3L138.0 232.1L138.0 227.6L133.0 227.4L128.0 227.4L123.1 227.5L118.1 227.6L113.2 227.7L108.2 227.7L103.3 227.7L98.4 227.6L93.4 227.5L88.5 227.5L83.5 227.4L78.6 227.3L73.6 227.2L68.7 227.1L63.7 227.0L58.8 226.9L53.8 226.9L48.9 226.8L43.9 226.7L39.0 226.7L34.0 226.7L29.0 226.8Z"/><path d="M54.0 222.8L57.8 222.9L61.6 223.0L65.3 223.1L69.1 223.2L72.9 223.2L76.6 223.3L80.4 223.3L84.2 223.3L88.0 223.3L91.8 223.2L95.5 223.1L99.3 223.0L103.1 222.9L106.8 222.8L110.6 222.8L114.3 222.8L118.1 222.8L121.9 222.8L125.7 222.8L129.4 222.8L133.2 222.8L137.0 222.7L137.0 219.6L133.3 219.4L129.5 219.3L125.7 219.2L121.9 219.1L118.2 219.0L114.4 218.9L110.6 218.8L106.8 218.7L103.0 218.6L99.2 218.7L95.5 218.7L91.7 218.8L87.9 218.9L84.2 219.0L80.4 219.0L76.6 219.0L72.9 219.1L69.1 219.1L65.3 219.2L61.5 219.3L57.8 219.5L54.0 219.6Z"/><path d="M134.2 219.2L134.0 219.8L133.9 220.3L133.8 220.9L133.7 221.4L133.6 222.0L133.6 222.5L133.5 223.1L133.5 223.6L133.5 224.2L133.5 224.8L133.5 225.4L133.5 225.9L133.6 226.5L133.6 227.1L133.7 227.6L133.8 228.2L133.9 228.8L133.9 229.3L134.0 229.9L134.1 230.4L134.2 230.9L134.4 231.5L136.9 231.5L137.1 230.9L137.2 230.3L137.2 229.8L137.3 229.2L137.3 228.6L137.3 228.1L137.4 227.5L137.4 227.0L137.5 226.4L137.5 225.9L137.5 225.3L137.5 224.8L137.5 224.2L137.5 223.7L137.5 223.1L137.5 222.6L137.5 222.0L137.4 221.5L137.3 220.9L137.2 220.3L137.1 219.8L136.9 219.2Z"/></g><g fill="#F5F5F5"><path d="M128.0 28.3L132.4 28.5L136.7 28.8L140.7 29.3L144.6 29.9L148.3 30.8L151.8 31.8L155.1 32.9L158.2 34.2L161.2 35.6L164.0 37.2L166.6 38.8L169.1 40.6L171.4 42.5L173.6 44.5L175.6 46.6L177.4 48.8L179.0 51.2L180.4 53.6L181.6 56.2L182.7 58.9L183.5 61.7L184.2 64.6L184.6 67.6L185.0 70.7L185.2 73.8L185.2 77.0L185.1 80.0L184.6 82.9L183.9 85.7L182.8 88.4L181.5 91.0L179.9 93.5L177.9 95.9L175.6 98.2L173.0 100.4L170.0 102.6L166.7 104.7L163.1 106.6L159.1 108.6L154.7 110.4L150.0 112.1L144.9 113.7L139.5 115.2L133.6 116.7L127.5 118.1L120.9 119.4L114.0 120.6L106.8 121.7L99.1 122.7L91.1 123.6L82.7 124.3L73.9 124.8L74.1 128.4L83.0 128.0L91.4 127.4L99.6 126.7L107.3 125.8L114.7 124.8L121.7 123.7L128.4 122.5L134.7 121.2L140.6 119.9L146.3 118.4L151.6 116.8L156.5 115.1L161.1 113.2L165.4 111.2L169.3 109.1L172.9 106.8L176.1 104.4L179.1 101.9L181.6 99.2L183.8 96.3L185.7 93.4L187.2 90.3L188.4 87.1L189.2 83.9L189.7 80.5L189.9 77.0L189.8 73.6L189.6 70.3L189.3 67.0L188.8 63.8L188.2 60.6L187.3 57.4L186.2 54.3L184.8 51.4L183.2 48.5L181.4 45.8L179.4 43.3L177.1 40.9L174.7 38.7L172.1 36.6L169.3 34.7L166.4 33.0L163.3 31.4L160.1 29.9L156.7 28.6L153.1 27.4L149.3 26.5L145.4 25.7L141.3 25.1L137.0 24.7L132.6 24.5L128.0 24.5Z"/><path d="M73.9 128.3L83.1 128.8L92.0 129.4L100.5 130.2L108.6 131.0L116.3 132.0L123.7 133.1L130.6 134.3L137.2 135.6L143.4 137.0L149.3 138.6L154.8 140.2L159.9 142.0L164.6 143.8L169.0 145.8L173.0 147.9L176.6 150.1L179.8 152.3L182.7 154.7L185.3 157.2L187.5 159.8L189.5 162.5L191.1 165.3L192.4 168.2L193.3 171.3L193.8 174.6L194.0 178.0L193.9 181.3L193.6 184.5L193.1 187.6L192.4 190.7L191.6 193.6L190.5 196.5L189.3 199.2L187.9 201.9L186.4 204.4L184.7 206.9L182.9 209.2L180.8 211.5L178.6 213.6L176.2 215.6L173.7 217.5L171.0 219.2L168.1 220.8L165.0 222.3L161.7 223.6L158.3 224.7L154.6 225.6L150.9 226.3L146.9 226.9L142.8 227.4L138.5 227.7L134.0 227.8L134.0 231.2L138.6 231.2L143.0 231.0L147.3 230.7L151.5 230.2L155.5 229.5L159.3 228.6L163.1 227.5L166.6 226.2L170.0 224.7L173.1 223.0L176.2 221.1L179.0 219.1L181.6 217.0L184.0 214.6L186.3 212.2L188.4 209.6L190.3 206.9L192.0 204.1L193.5 201.2L194.8 198.2L196.0 195.1L196.9 191.9L197.7 188.5L198.2 185.1L198.6 181.6L198.7 178.0L198.5 174.1L197.9 170.3L196.8 166.7L195.4 163.2L193.6 159.9L191.5 156.7L189.0 153.7L186.2 150.9L183.0 148.2L179.5 145.6L175.6 143.2L171.3 141.0L166.6 138.9L161.7 137.0L156.3 135.3L150.7 133.6L144.6 132.1L138.2 130.7L131.5 129.4L124.4 128.3L116.9 127.3L109.1 126.4L100.9 125.7L92.3 125.1L83.4 124.6L74.1 124.2Z"/></g></g><path class="ponto-alvo" fill="#90A7E9" d="M 216 207.5 C 222.8 207.3, 227.8 212.8, 227.5 219.3 C 227.2 225.4, 222.0 230.7, 215.6 230.3 C 209.6 229.9, 204.3 224.7, 204.7 218.7 C 205.1 212.8, 210.3 207.7, 216 207.5 Z"/></g><g fill="#F5F5F5"><path transform="translate(262.000 151) scale(0.068 -0.068)" d="M456 0 414 133H181L139 0H20L247 680H353L581 0ZM246 341 215 243H379L348 341L298 513Z"/><path transform="translate(312.388 151) scale(0.068 -0.068)" d="M486 115V0H94V680H214V115Z"/><path transform="translate(356.384 151) scale(0.068 -0.068)" d="M214 0H94V680H214Z"/><path transform="translate(386.848 151) scale(0.068 -0.068)" d="M242 101Q358 101 358 187Q358 222 340.5 242.0Q323 262 276 277L194 304Q47 352 47 497Q47 581 99.5 635.5Q152 690 264 690Q311 690 357.0 679.5Q403 669 455 646L418 543Q370 562 336.5 570.5Q303 579 268 579Q222 579 195.5 562.5Q169 546 169 503Q169 471 187.5 450.5Q206 430 249 416L331 389Q405 364 442.5 316.5Q480 269 480 191Q480 101 423.0 45.5Q366 -10 244 -10Q196 -10 144.5 1.5Q93 13 32 41L69 144Q125 120 164.5 110.5Q204 101 242 101Z"/><path transform="translate(431.592 151) scale(0.068 -0.068)" d="M575 412V269Q575 139 510.0 64.5Q445 -10 320 -10Q194 -10 129.5 64.5Q65 139 65 269V412Q65 542 129.5 616.0Q194 690 320 690Q445 690 510.0 616.0Q575 542 575 412ZM452 412Q452 494 420.0 535.5Q388 577 320 577Q252 577 220.0 535.5Q188 494 188 412V269Q188 187 220.0 145.0Q252 103 320 103Q388 103 420.0 145.0Q452 187 452 269Z"/><path transform="translate(484.632 151) scale(0.068 -0.068)" d="M94 0V680H204Q283 577 354.0 462.5Q425 348 483 227L474 430V680H589V0H479Q415 126 346.5 253.5Q278 381 201 494L209 260V0Z"/></g></svg></span>
+  <p class="legenda" data-t="rodape"></p>
+</div></footer>
+
+<script>
+/* =====================================================================
+   BALISON · Design System v2 · traco.js
+   "Mão e máquina": o desenho começa como traço de mão (linha que passa do
+   canto, espessura que varia, leve tremor) e a máquina completa por cima com
+   a linha precisa de 1 px. A mão fica visível ao fundo.
+
+   Uso:
+     <svg class="traco" viewBox="0 0 600 400" aria-hidden="true">
+       <line   x1=".." y1=".." x2=".." y2=".."/>          mão e máquina
+       <rect   x=".." y=".." width=".." height=".."/>     mão e máquina (4 traços)
+       <path   d="..." data-so="mao"/>                    só mão (gente, árvore, água)
+       <polygon points="..." data-hachura="45 7"/>        hachura à mão (ângulo, passo)
+       <polygon points="..." data-pontilhado="10"/>       pontilhado à mão (passo): concreto em corte, terreno
+       <circle cx=".." cy=".." r="4" data-ponto/>         ponto verde do resultado (1 por desenho)
+     </svg>
+   Atributos no <svg>: data-semente (número; mesmo desenho a cada carga),
+   data-modo="mao-e-maquina" (padrão) | "mao" | "maquina", data-auto="nao"
+   para não desenhar sozinho ao entrar na tela, data-ritmo="2" para desenhar
+   duas vezes mais devagar (ex.: barra de progresso), data-teto="4500" para o
+   tempo máximo da mão em ms (desenhos grandes são comprimidos até caber).
+   API: Traco.desenhar(svg), Traco.repetir(svg), Traco.iniciar(raiz), Traco.preparar(svg).
+   Sem dependências. Respeita prefers-reduced-motion (mostra o estado final).
+   ===================================================================== */
+(function () {
+  "use strict";
+  var NS = "http://www.w3.org/2000/svg";
+
+  /* ---------- aleatório com semente: o mesmo desenho sempre ---------- */
+  function gerador(semente) {
+    var s = (semente >>> 0) || 0x9e3779b9;
+    return function () { s ^= s << 13; s ^= s >>> 17; s ^= s << 5; return (s >>> 0) / 4294967296; };
+  }
+  function ruido(r, nos) { // ruído suave 1D, t de 0 a 1
+    var v = []; for (var i = 0; i <= nos + 1; i++) v.push(r() * 2 - 1);
+    return function (t) {
+      var x = Math.max(0, Math.min(1, t)) * nos, i = Math.floor(x), f = x - i, u = (1 - Math.cos(f * Math.PI)) / 2;
+      return v[i] * (1 - u) + v[Math.min(i + 1, nos + 1)] * u;
+    };
+  }
+
+  /* ---------- geometria de origem → traços ---------- */
+  function num(el, a) { return parseFloat(el.getAttribute(a)) || 0; }
+  function pontosDe(el) {
+    var t = el.tagName.toLowerCase();
+    if (t === "line") return [[num(el, "x1"), num(el, "y1")], [num(el, "x2"), num(el, "y2")]];
+    if (t === "rect") {
+      var x = num(el, "x"), y = num(el, "y"), w = num(el, "width"), h = num(el, "height");
+      return [[x, y], [x + w, y], [x + w, y + h], [x, y + h], [x, y]];
+    }
+    if (t === "polyline" || t === "polygon") {
+      var n = (el.getAttribute("points") || "").trim().split(/[\s,]+/).map(Number), p = [];
+      for (var i = 0; i + 1 < n.length; i += 2) p.push([n[i], n[i + 1]]);
+      if (t === "polygon" && p.length) p.push(p[0]);
+      return p;
+    }
+    return null; // path, circle, ellipse: tratados como curva única
+  }
+  function amostrarCurva(el) {
+    var L = el.getTotalLength(), n = Math.max(12, Math.ceil(L / 5)), p = [];
+    for (var i = 0; i <= n; i++) { var q = el.getPointAtLength(L * i / n); p.push([q.x, q.y]); }
+    return p;
+  }
+  function dentro(poli, x, y) { // ponto dentro do polígono (raio par/ímpar)
+    var c = false;
+    for (var i = 0, j = poli.length - 1; i < poli.length; j = i++) {
+      var a = poli[i], b = poli[j];
+      if ((a[1] > y) !== (b[1] > y) && x < (b[0] - a[0]) * (y - a[1]) / (b[1] - a[1]) + a[0]) c = !c;
+    }
+    return c;
+  }
+  function segmentos(pts) { var s = []; for (var i = 0; i + 1 < pts.length; i++) s.push([pts[i], pts[i + 1]]); return s; }
+
+  /* ---------- a linha de mão ---------- */
+  // Reta A→B: passa do canto nas pontas, curva de leve, treme pouco.
+  function retaDeMao(a, b, r, peso) {
+    var dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy) || 1, ux = dx / L, uy = dy / L, nx = -uy, ny = ux;
+    var passa1 = Math.min(10, 2 + L * 0.03) * (0.4 + r() * 0.8);
+    var passa2 = Math.min(14, 3 + L * 0.05) * (0.5 + r() * 0.9);
+    var curva = (r() * 2 - 1) * Math.min(3, 0.4 + L * 0.008);
+    var giro = (r() * 2 - 1) * 0.006;
+    var tremor = ruido(r, Math.max(2, Math.round(L / 60)));
+    var amp = Math.min(1.4, 0.3 + L * 0.003);
+    var n = Math.max(8, Math.ceil((L + passa1 + passa2) / 6)), out = [];
+    for (var i = 0; i <= n; i++) {
+      var t = i / n, s = -passa1 + t * (L + passa1 + passa2), k = s / L;
+      var desvio = curva * Math.sin(Math.PI * Math.max(0, Math.min(1, k))) + amp * tremor(t) + giro * (s - L / 2);
+      out.push([a[0] + ux * s + nx * desvio, a[1] + uy * s + ny * desvio]);
+    }
+    return { pts: out, peso: peso };
+  }
+  // Curva já amostrada: só tremor e um leve prolongamento nas pontas.
+  function curvaDeMao(p, r, peso, amp) {
+    amp = amp == null ? 0.9 : amp;
+    var tremor = ruido(r, Math.max(3, Math.round(p.length / 10))), out = [];
+    for (var i = 0; i < p.length; i++) {
+      var a = p[Math.max(0, i - 1)], b = p[Math.min(p.length - 1, i + 1)];
+      var dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy) || 1;
+      var d = amp * tremor(i / (p.length - 1));
+      out.push([p[i][0] - dy / L * d, p[i][1] + dx / L * d]);
+    }
+    return { pts: out, peso: peso };
+  }
+  // Contorno com pressão: fino nas pontas, cheio no meio.
+  function contorno(traco, r) {
+    var p = traco.pts, n = p.length, esq = [], dir = [], var2 = ruido(r, 4);
+    for (var i = 0; i < n; i++) {
+      var a = p[Math.max(0, i - 1)], b = p[Math.min(n - 1, i + 1)];
+      var dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy) || 1, t = i / (n - 1);
+      var w = traco.peso / 2 * Math.pow(Math.sin(Math.PI * (0.06 + 0.88 * t)), 0.55) * (1 + 0.18 * var2(t));
+      esq.push([p[i][0] - dy / L * w, p[i][1] + dx / L * w]);
+      dir.push([p[i][0] + dy / L * w, p[i][1] - dx / L * w]);
+    }
+    var todos = esq.concat(dir.reverse());
+    return "M" + todos.map(function (q) { return q[0].toFixed(2) + " " + q[1].toFixed(2); }).join("L") + "Z";
+  }
+  function linhaD(p) { return "M" + p.map(function (q) { return q[0].toFixed(2) + " " + q[1].toFixed(2); }).join("L"); }
+  function comprimento(p) { var L = 0; for (var i = 1; i < p.length; i++) L += Math.hypot(p[i][0] - p[i - 1][0], p[i][1] - p[i - 1][1]); return L; }
+
+  /* ---------- figura humana de gesto ----------
+     Inspirada no croqui de arquiteto: corpo comprido, cabeça pequena e aberta,
+     tronco em duas passadas, pernas e braços num traço só, sem rosto.
+     Marcação: <line x1 y1 (pés) x2 y2 (altura da cabeça) data-figura="caminha|parado|aponta|pipa|sentado|segura|carrega|notebook"
+     data-direcao="esquerda" data-pipa="x y" data-croqui="id-de-um-template">. */
+  function suave(c) { // Catmull-Rom: pontos de controle → curva
+    if (c.length < 3) return c;
+    var o = [];
+    for (var i = 0; i < c.length - 1; i++) {
+      var p0 = c[Math.max(0, i - 1)], p1 = c[i], p2 = c[i + 1], p3 = c[Math.min(c.length - 1, i + 2)];
+      for (var k = 0; k < 8; k++) {
+        var t = k / 8, t2 = t * t, t3 = t2 * t, q = [];
+        for (var e = 0; e < 2; e++) q.push(0.5 * (2 * p1[e] + (-p0[e] + p2[e]) * t + (2 * p0[e] - 5 * p1[e] + 4 * p2[e] - p3[e]) * t2 + (-p0[e] + 3 * p1[e] - 3 * p2[e] + p3[e]) * t3));
+        o.push(q);
+      }
+    }
+    o.push(c[c.length - 1]);
+    return o;
+  }
+  // Projeta um desenho guardado num <template data-viewbox="x y w h"> dentro do quadrilátero da prancha.
+  function croquiNaFolha(tpl, M, larguraFolha) {
+    var vb = (tpl.getAttribute("data-viewbox") || "0 0 1000 1000").split(/[\s,]+/).map(Number);
+    var N = function (x, y) { return M((x - vb[0]) / vb[2], (y - vb[1]) / vb[3]); };
+    var esc = larguraFolha / vb[2], out = [];
+    (tpl.content || tpl).querySelectorAll("line,rect,polyline,polygon,ellipse,circle").forEach(function (e) {
+      var t = e.tagName.toLowerCase();
+      if (e.hasAttribute("data-ponto")) return;
+      if (e.hasAttribute("data-figura")) { var fg = [N(num(e, "x1"), num(e, "y1")), N(num(e, "x1"), num(e, "y2"))]; fg.fino = true; out.push(fg); return; }
+      if (t === "ellipse" || t === "circle") {
+        var cx = num(e, "cx"), cy = num(e, "cy"), rx = num(e, "rx") || num(e, "r"), ry = num(e, "ry") || num(e, "r"), p = [];
+        for (var i = 0; i <= 10; i++) { var a = i / 10 * Math.PI * 2; p.push(N(cx + Math.cos(a) * rx, cy + Math.sin(a) * ry)); }
+        p.curva = true; out.push(p); return;
+      }
+      var pts = pontosDe(e); if (!pts) return;
+      if (e.hasAttribute("data-hachura")) {
+        var cfg = e.getAttribute("data-hachura").split(/\s+/).map(Number);
+        hachura(pts.map(function (q) { return N(q[0], q[1]); }), cfg[0] || 45, Math.max(1.6, (cfg[1] || 7) * esc * 1.6)).forEach(function (s) { s.fino = true; out.push(s); });
+        return;
+      }
+      segmentos(pts).forEach(function (s) { var l = [N(s[0][0], s[0][1]), N(s[1][0], s[1][1])]; l.fino = true; out.push(l); });
+    });
+    return out;
+  }
+  function figura(f, r) {
+    var fx = num(f, "x1"), fy = num(f, "y1"), h = Math.abs(num(f, "y1") - num(f, "y2")) || 30;
+    var d = f.getAttribute("data-direcao") === "esquerda" ? -1 : 1, tipo = f.getAttribute("data-figura") || "caminha";
+    var P = function (x, y) { return [fx + d * x * h + (r() - 0.5) * h * 0.03, fy - y * h + (r() - 0.5) * h * 0.02]; };
+    var sentado = tipo === "sentado";
+    // esqueleto: quadril, pescoço, ombro, cabeça (sentado: quadril na altura do banco, tronco inclinado)
+    var quadril = sentado ? P(0, 0.3) : P(0.02, 0.47);
+    var pescoco = sentado ? P(0.15, 0.64) : P(0.09, 0.82);
+    var ombro = sentado ? P(0.14, 0.6) : P(0.08, 0.78);
+    var cab = sentado ? P(0.19, 0.72) : P(0.12, 0.905), raio = 0.05 * h;
+    var meio = sentado ? P(0.07, 0.48) : P(0.07, 0.66), meio2 = sentado ? P(0.05, 0.46) : P(0.03, 0.63);
+    var linhas = [], a0 = r() * Math.PI * 2, cabeca = [];
+    for (var i = 0; i <= 16; i++) { var a = a0 + i / 16 * Math.PI * 2 * 0.9; cabeca.push([cab[0] + Math.cos(a) * raio, cab[1] + Math.sin(a) * raio * 1.2]); }
+    linhas.push(cabeca);
+    linhas.push(suave([pescoco, meio, quadril]));
+    linhas.push(suave([[pescoco[0] + d * 0.01 * h, pescoco[1] + 0.03 * h], meio2, [quadril[0] - d * 0.02 * h, quadril[1] - 0.03 * h]]));
+    var pernasAndando = [[quadril, P(0.14, 0.25), P(0.21, 0.01), P(0.27, 0.0)], [quadril, P(-0.05, 0.25), P(-0.16, 0.03), P(-0.12, 0.0)]];
+    var pernasParado = [[quadril, P(0.05, 0.24), P(0.07, 0)], [quadril, P(-0.03, 0.24), P(-0.05, 0)]];
+    var bracosAndando = [[ombro, P(0.14, 0.62), P(0.21, 0.5)], [ombro, P(-0.06, 0.62), P(-0.13, 0.53)]];
+    var bracosParado = [[ombro, P(0.11, 0.6), P(0.12, 0.44)], [ombro, P(0.01, 0.6), P(-0.02, 0.45)]];
+    var pernas = pernasParado, bracos = bracosParado, mao = null, folha = null;
+    if (tipo === "caminha") { pernas = pernasAndando; bracos = bracosAndando; }
+    if (tipo === "aponta") { pernas = pernasAndando; bracos = bracosAndando; mao = P(0.4, 0.95); bracos[0] = [ombro, P(0.22, 0.86), mao]; }
+    if (tipo === "pipa") { pernas = pernasAndando; bracos = bracosAndando; mao = P(0.22, 1.08); bracos[0] = [ombro, P(0.16, 0.95), mao]; }
+    if (sentado) { // desenhando na prancheta
+      pernas = [[quadril, P(0.2, 0.31), P(0.23, 0.0)], [quadril, P(0.16, 0.27), P(0.15, 0.0)]];
+      bracos = [[ombro, P(0.27, 0.5), P(0.4, 0.58)], [ombro, P(0.22, 0.44), P(0.34, 0.5)]];
+    }
+    var croqui = null;
+    if (tipo === "segura") { // de pé, segurando uma prancha grande e olhando o desenho
+      var c0 = P(0.2, 1.05), c1 = P(0.8, 1.0), c2 = P(0.78, 0.6), c3 = P(0.18, 0.64);
+      bracos = [[ombro, P(0.14, 0.62), c3], [ombro, P(0.22, 0.58), P(0.46, 0.63)]];
+      folha = [c0, c1, c2, c3, c0];
+      var M = function (u, v) { return [(1 - v) * ((1 - u) * c0[0] + u * c1[0]) + v * ((1 - u) * c3[0] + u * c2[0]), (1 - v) * ((1 - u) * c0[1] + u * c1[1]) + v * ((1 - u) * c3[1] + u * c2[1])]; };
+      var tpl = f.getAttribute("data-croqui") && document.getElementById(f.getAttribute("data-croqui"));
+      croqui = tpl ? croquiNaFolha(tpl, M, Math.hypot(c1[0] - c0[0], c1[1] - c0[1])) : [];
+    }
+    if (tipo === "carrega") { // andando com a folha
+      pernas = pernasAndando;
+      bracos = [[ombro, P(0.13, 0.6), P(0.2, 0.5)], bracosAndando[1]];
+      folha = [P(0.17, 0.44), P(0.33, 0.49), P(0.31, 0.66), P(0.15, 0.61), P(0.17, 0.44)];
+    }
+    if (tipo === "notebook") { // de pé, digitando na mesa
+      bracos = [[ombro, P(0.17, 0.6), P(0.3, 0.5)], [ombro, P(0.13, 0.58), P(0.26, 0.49)]];
+    }
+    pernas.concat(bracos).forEach(function (c) { linhas.push(suave(c)); });
+    if (folha) linhas.push(folha);
+    if (croqui) linhas = linhas.concat(croqui);
+    if (tipo === "pipa" && f.hasAttribute("data-pipa")) {
+      var k = f.getAttribute("data-pipa").split(/[\s,]+/).map(Number), dx = k[0] - mao[0], dy = k[1] - mao[1], L = Math.hypot(dx, dy) || 1;
+      var nx = -dy / L, ny = dx / L, fase = r() * 6, fio = [];
+      for (var t = 0; t <= 48; t++) {
+        var u = t / 48, s = Math.sin(u * Math.PI * 2.3 + fase) * L * 0.05 * (1 - u * 0.4) + u * (1 - u) * L * 0.22;
+        fio.push([mao[0] + dx * u + nx * s, mao[1] + dy * u + ny * s]);
+      }
+      linhas.push(fio);
+      var s2 = h * 0.2;
+      linhas.push([[k[0] - s2 * 0.1, k[1] - s2 * 0.55], [k[0] + s2 * 0.5, k[1] - s2 * 0.05], [k[0] + s2 * 0.05, k[1] + s2 * 0.6], [k[0] - s2 * 0.5, k[1] + s2 * 0.02], [k[0] - s2 * 0.05, k[1] - s2 * 0.6]]);
+    }
+    return linhas;
+  }
+
+  /* ---------- hachura: linhas paralelas recortadas no polígono ---------- */
+  function hachura(poli, angulo, passo) {
+    var a = angulo * Math.PI / 180, ux = Math.cos(a), uy = Math.sin(a), nx = -uy, ny = ux, proj = poli.map(function (q) { return q[0] * nx + q[1] * ny; });
+    var min = Math.min.apply(null, proj), max = Math.max.apply(null, proj), linhas = [];
+    for (var c = min + passo / 2; c < max; c += passo) {
+      var cortes = [];
+      for (var i = 0; i + 1 < poli.length; i++) {
+        var p = poli[i], q = poli[i + 1], dp = p[0] * nx + p[1] * ny - c, dq = q[0] * nx + q[1] * ny - c;
+        if ((dp < 0) !== (dq < 0)) { var t = dp / (dp - dq); cortes.push([p[0] + (q[0] - p[0]) * t, p[1] + (q[1] - p[1]) * t]); }
+      }
+      cortes.sort(function (m, n) { return (m[0] * ux + m[1] * uy) - (n[0] * ux + n[1] * uy); });
+      for (var j = 0; j + 1 < cortes.length; j += 2) linhas.push([cortes[j], cortes[j + 1]]);
+    }
+    return linhas;
+  }
+
+  /* ---------- montagem ---------- */
+  function el(tag, attrs) { var e = document.createElementNS(NS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); return e; }
+  var idSeq = 0;
+  function preparar(svg) {
+    if (svg.__traco) return svg.__traco;
+    var r = gerador(parseInt(svg.getAttribute("data-semente"), 10) || 7);
+    var modo = svg.getAttribute("data-modo") || "mao-e-maquina";
+    var fontes = Array.prototype.filter.call(svg.children, function (c) { return /^(line|rect|path|polyline|polygon|circle|ellipse)$/i.test(c.tagName); });
+    var maos = [], maquinas = [], pontos = [];
+    fontes.forEach(function (f) {
+      var peso = parseFloat(f.getAttribute("data-peso")) || 1.7;
+      if (f.hasAttribute("data-ponto")) { pontos.push(f); return; }
+      if (f.hasAttribute("data-figura")) {
+        figura(f, r).forEach(function (p) { var pf = parseFloat(f.getAttribute("data-peso")) || 1.1; var t = p.fino ? retaDeMao(p[0], p[1], r, pf * 0.32) : p.curva ? curvaDeMao(p, r, pf * 0.3, 0.04) : curvaDeMao(p, r, pf, 0.18); if (p.fino) { t.pts = t.pts.slice(1, -1); } t.fixa = true; maos.push(t); });
+        return;
+      }
+      if (f.hasAttribute("data-hachura")) {
+        var cfg = f.getAttribute("data-hachura").split(/\s+/).map(Number), poli = pontosDe(f);
+        hachura(poli, cfg[0] || 45, cfg[1] || 7).forEach(function (s) {
+          var t = retaDeMao(s[0], s[1], r, peso * 0.55); t.pts = t.pts.slice(1, -1); t.fixa = true; maos.push(t);
+        });
+        return;
+      }
+      if (f.hasAttribute("data-pontilhado")) { // pontinhos de mão dentro do polígono (concreto em corte, terreno)
+        var passoP = parseFloat(f.getAttribute("data-pontilhado")) || 10, poliP = pontosDe(f);
+        var xs = poliP.map(function (q) { return q[0]; }), ys = poliP.map(function (q) { return q[1]; });
+        for (var py = Math.min.apply(0, ys) + passoP / 2; py < Math.max.apply(0, ys); py += passoP) {
+          for (var px = Math.min.apply(0, xs) + passoP / 2; px < Math.max.apply(0, xs); px += passoP) {
+            var qx = px + (r() - 0.5) * passoP * 0.9, qy = py + (r() - 0.5) * passoP * 0.9;
+            if (r() < 0.35 || !dentro(poliP, qx, qy)) continue; // falha de propósito: pontilhado de mão não é uniforme
+            var lado = (r() - 0.5) * peso * 0.6;
+            maos.push({ pts: [[qx, qy], [qx + peso * 0.4, qy + lado * 0.3], [qx + peso * 0.8, qy + lado]], peso: peso, fixa: true });
+          }
+        }
+        return;
+      }
+      var pts = pontosDe(f), soMao = f.getAttribute("data-so") === "mao", soMaq = f.getAttribute("data-so") === "maquina";
+      if (!soMaq) {
+        var novos = pts ? segmentos(pts).map(function (s) { return retaDeMao(s[0], s[1], r, peso); }) : [curvaDeMao(amostrarCurva(f), r, peso)];
+        novos.forEach(function (t) { t.fixa = soMao; maos.push(t); });
+      }
+      if (!soMao && modo !== "mao") maquinas.push({ d: pts ? linhaD(pts) : null, fonte: f, w: f.getAttribute("data-linha") || "1" });
+    });
+
+    var id = "traco-" + (++idSeq);
+    var gMao = el("g", { "class": "traco-mao", mask: "url(#" + id + ")" });
+    var gFixa = el("g", { "class": "traco-mao-fixa", mask: "url(#" + id + ")" }); // só mão: gente, horizonte, hachura; não desbota
+    var vb = svg.viewBox.baseVal;
+    // região explícita: o padrão (-10%..120%) corta desenhos cujo viewBox não começa em 0
+    var mask = el("mask", { id: id, maskUnits: "userSpaceOnUse", x: vb.x - 50, y: vb.y - 50, width: vb.width + 100, height: vb.height + 100 });
+    mask.appendChild(el("rect", { x: vb.x - 50, y: vb.y - 50, width: vb.width + 100, height: vb.height + 100, fill: "black" }));
+    var tempoMao = 0, itensMao = [];
+    maos.forEach(function (t) {
+      (t.fixa ? gFixa : gMao).appendChild(el("path", { d: contorno(t, r), fill: "currentColor" }));
+      var L = comprimento(t.pts), dur = Math.min(620, 160 + L * 1.6);
+      var c = el("path", { d: linhaD(t.pts), fill: "none", stroke: "white", "stroke-width": t.peso * 3 + 2, "stroke-linecap": "round", pathLength: "1" });
+      mask.appendChild(c);
+      itensMao.push({ el: c, inicio: tempoMao, dur: dur });
+      tempoMao += dur * 0.42; // o próximo começa antes de este acabar
+    });
+    var fimMao = itensMao.length ? itensMao[itensMao.length - 1].inicio + itensMao[itensMao.length - 1].dur : 0;
+    // teto de duração: desenho grande não pode prender o leitor (padrão 4,5 s para a mão)
+    var teto = parseFloat(svg.getAttribute("data-teto")) || 4500;
+    if (fimMao > teto) {
+      var esc = teto / fimMao;
+      itensMao.forEach(function (it) { it.inicio *= esc; it.dur = Math.max(120, it.dur * esc); });
+      fimMao = teto;
+    }
+
+    var gMaq = el("g", { "class": "traco-maquina", fill: "none", stroke: "currentColor" });
+    var itensMaq = [];
+    maquinas.forEach(function (m, i) {
+      var p;
+      if (m.d) p = el("path", { d: m.d });
+      else { p = m.fonte.cloneNode(false); p.removeAttribute("data-so"); p.removeAttribute("data-peso"); }
+      p.setAttribute("pathLength", "1"); p.setAttribute("stroke-width", m.w); // sem non-scaling-stroke: no Chrome ele quebra o pathLength do tracejado
+      p.setAttribute("stroke-linecap", "square"); p.setAttribute("fill", "none");
+      gMaq.appendChild(p); itensMaq.push({ el: p, i: i });
+    });
+    var gPonto = el("g", { "class": "traco-ponto" });
+    pontos.slice(0, 1).forEach(function (pt) {
+      var c = el("circle", { cx: pt.getAttribute("cx"), cy: pt.getAttribute("cy"), r: pt.getAttribute("r") || 4 });
+      c.style.transformOrigin = pt.getAttribute("cx") + "px " + pt.getAttribute("cy") + "px"; c.style.transformBox = "view-box";
+      gPonto.appendChild(c);
+    });
+
+    fontes.forEach(function (f) { f.style.display = "none"; });
+    var defs = el("defs", {}); defs.appendChild(mask);
+    svg.appendChild(defs); svg.appendChild(gFixa); svg.appendChild(gMao); svg.appendChild(gMaq); svg.appendChild(gPonto);
+    svg.__traco = { modo: modo, gMao: gMao, gFixa: gFixa, gMaq: gMaq, gPonto: gPonto, itensMao: itensMao, itensMaq: itensMaq, fimMao: fimMao };
+    svg.__traco.final = maoFinal(svg);
+    return svg.__traco;
+  }
+
+  /* ---------- animação (Web Animations API: só opacidade, transform e dashoffset) ---------- */
+  var reduzir = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var EASE_MAO = "cubic-bezier(.3,.1,.3,1)", EASE_MAQ = "cubic-bezier(.65,0,.35,1)";
+  function maoFinal(svg) { return parseFloat(getComputedStyle(svg).getPropertyValue("--traco-mao-final")) || 0.3; } // a mão fica visível ao fundo
+  function estadoFinal(d) {
+    d.itensMao.forEach(function (it) { it.el.style.strokeDasharray = "1"; it.el.style.strokeDashoffset = "0"; });
+    d.itensMaq.forEach(function (it) { it.el.style.strokeDasharray = "1"; it.el.style.strokeDashoffset = "0"; });
+    d.gMao.style.opacity = d.itensMaq.length ? d.final : 1;
+    d.gPonto.style.opacity = 1;
+  }
+  function desenhar(svg) {
+    var d = preparar(svg); d.final = maoFinal(svg);
+    (d.animacoes || []).forEach(function (a) { a.cancel(); });
+    d.animacoes = [];
+    if (reduzir) { estadoFinal(d); return; }
+    var k = parseFloat(svg.getAttribute("data-ritmo")) || 1; // 2 = duas vezes mais lento
+    var A = function (alvo, kf, op) { var a = alvo.animate(kf, Object.assign({ fill: "both" }, op)); d.animacoes.push(a); return a; };
+    d.itensMao.forEach(function (it) {
+      it.el.style.strokeDasharray = "1";
+      A(it.el, [{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], { duration: it.dur * k, delay: it.inicio * k, easing: EASE_MAO });
+    });
+    var inicioMaq = d.fimMao * 0.62 * k;
+    d.itensMaq.forEach(function (it) {
+      it.el.style.strokeDasharray = "1";
+      A(it.el, [{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], { duration: 760 * k, delay: inicioMaq + it.i * 55 * k, easing: EASE_MAQ });
+    });
+    var fimMaq = inicioMaq + (d.itensMaq.length * 55 + 760) * k;
+    d.gMao.style.opacity = "";
+    if (d.itensMaq.length) A(d.gMao, [{ opacity: 1 }, { opacity: d.final }], { duration: 900 * k, delay: inicioMaq + 300 * k, easing: "ease-out" });
+    A(d.gPonto, [{ opacity: 0, transform: "scale(.5)" }, { opacity: 1, transform: "scale(1)" }], { duration: 240, delay: Math.max(d.fimMao * k, fimMaq), easing: "cubic-bezier(.16,1,.3,1)" });
+  }
+
+  function iniciar(raiz) {
+    var svgs = (raiz || document).querySelectorAll("svg.traco");
+    var auto = [];
+    svgs.forEach(function (s) { preparar(s); if (s.getAttribute("data-auto") === "nao") estadoFinal(s.__traco); else auto.push(s); });
+    if (!("IntersectionObserver" in window)) { auto.forEach(desenhar); return; }
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { io.unobserve(e.target); desenhar(e.target); } });
+    }, { threshold: 0.35 });
+    auto.forEach(function (s) { s.__traco.final = maoFinal(s); estadoFinal(s.__traco); s.__traco.gFixa.style.opacity = 0; s.__traco.gMao.style.opacity = 0; s.__traco.gMaq.style.opacity = 0; s.__traco.gPonto.style.opacity = 0; io.observe(s); });
+  }
+  function repetir(svg) { var d = preparar(svg); d.gFixa.style.opacity = ""; d.gMaq.style.opacity = ""; d.gPonto.style.opacity = ""; desenhar(svg); }
+  // ao começar a desenhar, as camadas escondidas voltam a aparecer
+  var _desenhar = desenhar;
+  desenhar = function (svg) { var d = preparar(svg); d.gFixa.style.opacity = ""; d.gMaq.style.opacity = ""; d.gPonto.style.opacity = ""; _desenhar(svg); };
+
+  window.Traco = { iniciar: iniciar, desenhar: desenhar, repetir: repetir, preparar: preparar };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", function () { iniciar(); });
+  else iniciar();
+})();
+
+</script>
+<script>
+var ORCA = '<a href="https://orca.dev">Orca</a>';
+var TEXTOS = {
+pt: {
+  doc_titulo: "Orquestrar",
+  rotulo: "Skill para o Orca",
+  titulo: "Vários agentes no mesmo projeto, sem um pisar no outro",
+  lead: "Você descreve o trabalho uma vez. Um agente pergunta o que conta como pronto, divide em tarefas e entrega cada uma a um worker do Orca, na própria cópia do projeto. Ele volta com prova, e só entra na main o que passou nos testes.",
+  feito: "Feita para o " + ORCA + ", o app que roda vários agentes de código em paralelo, cada um na sua worktree. Usa os comandos de orquestração dele e não funciona sem ele.",
+  cta1: "Ver como começar",
+  fig1: "Uma pessoa trabalha no notebook. Do notebook sai uma linha que chega a três pessoas, cada uma no próprio notebook e na própria mesa.",
+  s1_rot: "O problema",
+  s1_tit: "Rodar agentes em paralelo vira trabalho seu",
+  pr1: "Dois agentes mexem no mesmo arquivo e um desfaz o que o outro fez.",
+  pr2: "Uma busca de uma linha vai para o modelo mais caro e gasta a cota da semana.",
+  pr3: "As worktrees continuam abertas depois que o trabalho acaba e vão se acumulando.",
+  pr4: "No fim, você lê cada terminal, junta tudo à mão e roda os testes.",
+  s2_rot: "Como funciona",
+  s2_tit: "Você conversa com um agente. O Orca roda o resto.",
+  s2_txt: "A <code>main</code> é a versão oficial do projeto. Cada worker trabalha numa cópia dela, e só volta o que foi testado.",
+  fig2: "Diagrama: a main é uma linha horizontal em cima. Três workers abrem cópias a partir dela. Os workers 1 e 2 mudam código e voltam para a main, onde o worker de merge junta e testa. O worker 3 só lê e a cópia dele fecha sem voltar. No fim da main, o resultado pronto.",
+  f2_main: "main · versão oficial", f2_abre: "cada worker abre uma cópia", f2_w1: "worker 1 · muda código", f2_w2: "worker 2 · muda código", f2_w3: "worker 3 · só lê", f2_junta: "merge: junta e testa, uma por vez", f2_fecha: "fecha sem voltar", f2_fim: "pronto",
+  c1: "<strong>Você descreve o trabalho.</strong> O orquestrador pergunta até saber o que conta como pronto e mostra a divisão numa tabela curta antes de começar.",
+  c2: "<strong>Cada worker trabalha na própria cópia</strong>, com o modelo mais barato que dá conta da tarefa. Ele tem até 3 tentativas. Se não der, para e avisa.",
+  c3: "<strong>Um worker de merge junta as cópias na main</strong>, uma por vez, e roda os testes a cada passo.",
+  c4: "<strong>Você recebe o relato com prova:</strong> o que ficou pronto, o que ficou aberto e o que espera o seu sim. As cópias são fechadas.",
+  s3_rot: "O que muda",
+  s3_tit: "Você deixa de ser o integrador",
+  b1_tit: "A main só recebe o que passou nos testes",
+  b1_txt: "Cada worker pode errar à vontade na própria cópia. Quem junta é um worker de merge, uma cópia por vez, com os testes rodando a cada passo.",
+  b2_tit: "Cada tarefa vai para o modelo mais barato que resolve",
+  b2_txt: "Antes de cada disparo, o orquestrador confere no Orca quais ferramentas estão instaladas e quanto de cota cada uma ainda tem. Você não precisa saber o nome de nenhum modelo.",
+  b2_mais: "Ver a faixa de cada tipo de tarefa",
+  b3_tit: "Você só decide o que não tem volta",
+  b3_txt: "Push, deploy, apagar, usar o modelo mais caro e pôr um modelo novo no catálogo esperam o seu sim. O resto anda sozinho.",
+  tab_label: "Tipo de tarefa, faixa e esforço",
+  th1: "Tipo de tarefa", th2: "Faixa", th3: "Esforço",
+  t1: "Consulta, leitura, busca, extração",
+  t2: "Código pontual, ajuste pequeno, teste rápido",
+  t3: "Tela, interface, leitura de imagem",
+  t4: "Merge e suíte de testes",
+  t5: "Conferência e revisão de segurança",
+  t6: "Pesquisa profunda",
+  t7: "Código grande, migração, integração arriscada",
+  t8: "Decisão ambígua, problema sem solução conhecida",
+  barato: "barato", inter: "intermediário", forte: "forte", topo: "topo, com o seu sim",
+  s4_rot: "Prova",
+  s4_tit: "Um trabalho real, do pedido ao relato",
+  prova_need: "[PENDENTE: primeiro trabalho real com /orquestrar. Quantos workers, quanto tempo, quanto de cota, o que falhou e como foi resolvido. Entra depois do teste.]",
+  s5_rot: "Dúvidas",
+  s5_tit: "Antes de usar",
+  f1_q: "E se um worker errar?",
+  f1_a: "Ele tem até 3 tentativas na própria cópia. Se não resolver, para, e o orquestrador traz o caso para você. A main não é tocada.",
+  f2_q: "Vai gastar minha cota?",
+  f2_a: "O orquestrador começa pela faixa mais barata e confere a cota de cada ferramenta no Orca antes de disparar. Ferramenta com a cota da semana em 100% não recebe worker.",
+  f3_q: "Um worker pode sair do combinado?",
+  f3_a: "Cada tarefa leva as regras por escrito: mexer só nos arquivos liberados, não chamar outros agentes, fazer commit só na própria cópia e nunca dar push. Se precisar decidir escopo, arquitetura ou segurança, ele pergunta antes.",
+  f4_q: "Preciso montar alguma coisa antes?",
+  f4_a: "Só ter o Orca e uma ferramenta de agente com login feito. No primeiro uso, o orquestrador pesquisa as ferramentas e os modelos que você tem e mostra o catálogo antes de gravar.",
+  f5_q: "Funciona sem o Orca?",
+  f5_a: "Não. A skill usa os comandos de orquestração do Orca para criar as cópias, abrir os workers e trocar mensagens com eles.",
+  s6_rot: "Começar",
+  s6_tit: "Comece pelo próximo trabalho que você ia dividir",
+  s6_txt: "Na primeira vez, escolha algo pequeno, para ver o fluxo inteiro.",
+  u1: "Instale o " + ORCA + " e faça login em pelo menos uma ferramenta de agente.",
+  u2: "Coloque a pasta <code>orquestrar</code> na pasta de skills do seu agente.",
+  u3: "Abra uma conversa no projeto e chame a skill:",
+  copiar: "Copiar", copiado: "Copiado",
+  cta2: "Baixar a skill no GitHub",
+  repo_need: "[PENDENTE: link do repositório no GitHub e do seu perfil no X.]",
+  convite: "Se você já divide trabalho entre agentes de outro jeito, me conta como faz hoje.",
+  rodape: "Criada por Alison Cruz, BALISON · novembro de 2026. Projeto independente, sem vínculo oficial com o Orca."
+},
+en: {
+  doc_titulo: "Orquestrar",
+  rotulo: "A skill for Orca",
+  titulo: "Several agents on one project, without stepping on each other",
+  lead: "You describe the work once. One agent asks what counts as done, splits it into tasks and hands each one to an Orca worker in its own copy of the project. It comes back with proof, and only what passed the tests goes into main.",
+  feito: "Built for " + ORCA + ", the app that runs several coding agents in parallel, each in its own worktree. It uses Orca's orchestration commands and does not work without it.",
+  cta1: "See how to start",
+  fig1: "A person works at a laptop. A line runs from the laptop to three other people, each at their own laptop and desk.",
+  s1_rot: "The problem",
+  s1_tit: "Running agents in parallel turns into your job",
+  pr1: "Two agents edit the same file and one undoes the other's work.",
+  pr2: "A one-line lookup goes to the most expensive model and eats the week's quota.",
+  pr3: "Worktrees stay open after the work is done and keep piling up.",
+  pr4: "In the end, you read every terminal, merge everything by hand and run the tests.",
+  s2_rot: "How it works",
+  s2_tit: "You talk to one agent. Orca runs the rest.",
+  s2_txt: "<code>main</code> is the official version of the project. Each worker works in a copy of it, and only tested work comes back.",
+  fig2: "Diagram: main is a horizontal line at the top. Three workers open copies from it. Workers 1 and 2 change code and come back to main, where the merge worker joins and tests them. Worker 3 only reads, and its copy closes without coming back. At the end of main, the finished result.",
+  f2_main: "main · official version", f2_abre: "each worker opens a copy", f2_w1: "worker 1 · changes code", f2_w2: "worker 2 · changes code", f2_w3: "worker 3 · read only", f2_junta: "merge: joins and tests, one at a time", f2_fecha: "closes without merging", f2_fim: "done",
+  c1: "<strong>You describe the work.</strong> The orchestrator asks until it knows what counts as done and shows the split in a short table before starting.",
+  c2: "<strong>Each worker works in its own copy</strong>, with the cheapest model that can handle the task. It gets up to 3 attempts. If that is not enough, it stops and reports.",
+  c3: "<strong>A merge worker brings the copies into main</strong> one at a time and runs the tests after each one.",
+  c4: "<strong>You get the report with proof:</strong> what is done, what is still open and what needs your approval. The copies are closed.",
+  s3_rot: "What changes",
+  s3_tit: "You stop being the integrator",
+  b1_tit: "main only receives what passed the tests",
+  b1_txt: "Each worker can get things wrong in its own copy. A merge worker does the joining, one copy at a time, with the tests running after each step.",
+  b2_tit: "Each task goes to the cheapest model that solves it",
+  b2_txt: "Before each launch, the orchestrator checks in Orca which tools are installed and how much quota each one has left. You don't need to know any model names.",
+  b2_mais: "See the tier for each task type",
+  b3_tit: "You only decide what can't be undone",
+  b3_txt: "Push, deploy, deleting, using the most expensive model and adding a new model to the catalog wait for your approval. Everything else moves on its own.",
+  tab_label: "Task type, tier and effort",
+  th1: "Task type", th2: "Tier", th3: "Effort",
+  t1: "Lookup, reading, search, extraction",
+  t2: "Small code change, quick fix, quick test",
+  t3: "Screens, interface, reading images",
+  t4: "Merge and test suite",
+  t5: "Review and security check",
+  t6: "Deep research",
+  t7: "Large code, migration, risky integration",
+  t8: "Ambiguous decision, problem with no known solution",
+  barato: "cheap", inter: "mid", forte: "strong", topo: "top, with your approval",
+  s4_rot: "Proof",
+  s4_tit: "A real job, from request to report",
+  prova_need: "[PENDING: first real job with /orquestrar. How many workers, how long, how much quota, what failed and how it was fixed. Goes in after the test.]",
+  s5_rot: "Questions",
+  s5_tit: "Before you use it",
+  f1_q: "What if a worker gets it wrong?",
+  f1_a: "It gets up to 3 attempts in its own copy. If that is not enough, it stops, and the orchestrator brings the case to you. main is not touched.",
+  f2_q: "Will it burn my quota?",
+  f2_a: "The orchestrator starts with the cheapest tier and checks each tool's quota in Orca before launching. A tool at 100% of its weekly quota gets no workers.",
+  f3_q: "Can a worker go off script?",
+  f3_a: "Every task carries the rules in writing: touch only the files it was given, call no other agents, commit only in its own copy and never push. If it needs to decide scope, architecture or security, it asks first.",
+  f4_q: "Do I need to set anything up first?",
+  f4_a: "Only Orca and one agent tool you are signed in to. On first use, the orchestrator researches the tools and models you have and shows you the catalog before saving it.",
+  f5_q: "Does it work without Orca?",
+  f5_a: "No. The skill uses Orca's orchestration commands to create the copies, open the workers and exchange messages with them.",
+  s6_rot: "Get started",
+  s6_tit: "Start with the next job you were going to split up",
+  s6_txt: "The first time, pick something small so you can see the whole flow.",
+  u1: "Install " + ORCA + " and sign in to at least one agent tool.",
+  u2: "Put the <code>orquestrar</code> folder in your agent's skills folder.",
+  u3: "Open a conversation in the project and call the skill:",
+  copiar: "Copy", copiado: "Copied",
+  cta2: "Get the skill on GitHub",
+  repo_need: "[PENDING: link to the GitHub repository and to your X profile.]",
+  convite: "If you already split work between agents some other way, tell me how you do it today.",
+  rodape: "Created by Alison Cruz, BALISON · November 2026. An independent project, not affiliated with Orca."
+},
+es: {
+  doc_titulo: "Orquestrar",
+  rotulo: "Skill para Orca",
+  titulo: "Varios agentes en el mismo proyecto, sin que uno pise al otro",
+  lead: "Describes el trabajo una vez. Un agente pregunta qué cuenta como terminado, lo divide en tareas y entrega cada una a un worker de Orca, en su propia copia del proyecto. Vuelve con pruebas, y a main solo entra lo que pasó los tests.",
+  feito: "Hecha para " + ORCA + ", la app que ejecuta varios agentes de código en paralelo, cada uno en su worktree. Usa los comandos de orquestación de Orca y no funciona sin él.",
+  cta1: "Ver cómo empezar",
+  fig1: "Una persona trabaja en un portátil. Del portátil sale una línea que llega a tres personas, cada una en su portátil y su mesa.",
+  s1_rot: "El problema",
+  s1_tit: "Ejecutar agentes en paralelo se convierte en tu trabajo",
+  pr1: "Dos agentes tocan el mismo archivo y uno deshace lo que hizo el otro.",
+  pr2: "Una búsqueda de una línea va al modelo más caro y gasta la cuota de la semana.",
+  pr3: "Las worktrees siguen abiertas cuando el trabajo termina y se van acumulando.",
+  pr4: "Al final, lees cada terminal, unes todo a mano y ejecutas los tests.",
+  s2_rot: "Cómo funciona",
+  s2_tit: "Hablas con un agente. Orca hace el resto.",
+  s2_txt: "<code>main</code> es la versión oficial del proyecto. Cada worker trabaja en una copia, y solo vuelve lo que se probó.",
+  fig2: "Diagrama: main es una línea horizontal arriba. Tres workers abren copias a partir de ella. Los workers 1 y 2 cambian código y vuelven a main, donde el worker de merge los une y los prueba. El worker 3 solo lee y su copia se cierra sin volver. Al final de main, el resultado listo.",
+  f2_main: "main · versión oficial", f2_abre: "cada worker abre una copia", f2_w1: "worker 1 · cambia código", f2_w2: "worker 2 · cambia código", f2_w3: "worker 3 · solo lee", f2_junta: "merge: une y prueba, de una en una", f2_fecha: "se cierra sin volver", f2_fim: "listo",
+  c1: "<strong>Describes el trabajo.</strong> El orquestador pregunta hasta saber qué cuenta como terminado y muestra la división en una tabla corta antes de empezar.",
+  c2: "<strong>Cada worker trabaja en su propia copia</strong>, con el modelo más barato que resuelve la tarea. Tiene hasta 3 intentos. Si no alcanza, para y avisa.",
+  c3: "<strong>Un worker de merge lleva las copias a main</strong> de una en una y ejecuta los tests en cada paso.",
+  c4: "<strong>Recibes el informe con pruebas:</strong> qué quedó listo, qué quedó abierto y qué espera tu aprobación. Las copias se cierran.",
+  s3_rot: "Qué cambia",
+  s3_tit: "Dejas de ser el integrador",
+  b1_tit: "main solo recibe lo que pasó los tests",
+  b1_txt: "Cada worker puede equivocarse en su propia copia. Quien une es un worker de merge, una copia por vez, con los tests corriendo en cada paso.",
+  b2_tit: "Cada tarea va al modelo más barato que la resuelve",
+  b2_txt: "Antes de cada lanzamiento, el orquestador comprueba en Orca qué herramientas están instaladas y cuánta cuota le queda a cada una. No necesitas saber el nombre de ningún modelo.",
+  b2_mais: "Ver el nivel de cada tipo de tarea",
+  b3_tit: "Solo decides lo que no tiene vuelta atrás",
+  b3_txt: "Push, deploy, borrar, usar el modelo más caro y añadir un modelo nuevo al catálogo esperan tu aprobación. Lo demás avanza solo.",
+  tab_label: "Tipo de tarea, nivel y esfuerzo",
+  th1: "Tipo de tarea", th2: "Nivel", th3: "Esfuerzo",
+  t1: "Consulta, lectura, búsqueda, extracción",
+  t2: "Código puntual, ajuste pequeño, test rápido",
+  t3: "Pantallas, interfaz, lectura de imágenes",
+  t4: "Merge y batería de tests",
+  t5: "Revisión y control de seguridad",
+  t6: "Investigación a fondo",
+  t7: "Código grande, migración, integración arriesgada",
+  t8: "Decisión ambigua, problema sin solución conocida",
+  barato: "barato", inter: "intermedio", forte: "fuerte", topo: "tope, con tu aprobación",
+  s4_rot: "Prueba",
+  s4_tit: "Un trabajo real, del pedido al informe",
+  prova_need: "[PENDIENTE: primer trabajo real con /orquestrar. Cuántos workers, cuánto tiempo, cuánta cuota, qué falló y cómo se resolvió. Entra después de la prueba.]",
+  s5_rot: "Dudas",
+  s5_tit: "Antes de usarla",
+  f1_q: "¿Y si un worker se equivoca?",
+  f1_a: "Tiene hasta 3 intentos en su propia copia. Si no lo resuelve, para, y el orquestador te trae el caso. main no se toca.",
+  f2_q: "¿Va a gastar mi cuota?",
+  f2_a: "El orquestador empieza por el nivel más barato y comprueba la cuota de cada herramienta en Orca antes de lanzar. Una herramienta con la cuota semanal al 100% no recibe workers.",
+  f3_q: "¿Un worker puede salirse de lo acordado?",
+  f3_a: "Cada tarea lleva las reglas por escrito: tocar solo los archivos permitidos, no llamar a otros agentes, hacer commit solo en su copia y nunca hacer push. Si tiene que decidir alcance, arquitectura o seguridad, pregunta antes.",
+  f4_q: "¿Tengo que preparar algo antes?",
+  f4_a: "Solo Orca y una herramienta de agente con sesión iniciada. En el primer uso, el orquestador investiga las herramientas y los modelos que tienes y te muestra el catálogo antes de guardarlo.",
+  f5_q: "¿Funciona sin Orca?",
+  f5_a: "No. La skill usa los comandos de orquestación de Orca para crear las copias, abrir los workers e intercambiar mensajes con ellos.",
+  s6_rot: "Empezar",
+  s6_tit: "Empieza por el próximo trabajo que ibas a dividir",
+  s6_txt: "La primera vez, elige algo pequeño para ver el flujo completo.",
+  u1: "Instala " + ORCA + " e inicia sesión en al menos una herramienta de agente.",
+  u2: "Pon la carpeta <code>orquestrar</code> en la carpeta de skills de tu agente.",
+  u3: "Abre una conversación en el proyecto y llama a la skill:",
+  copiar: "Copiar", copiado: "Copiado",
+  cta2: "Descargar la skill en GitHub",
+  repo_need: "[PENDIENTE: enlace al repositorio en GitHub y a tu perfil en X.]",
+  convite: "Si ya repartes trabajo entre agentes de otra forma, cuéntame cómo lo haces hoy.",
+  rodape: "Creada por Alison Cruz, BALISON · noviembre de 2026. Proyecto independiente, sin vínculo oficial con Orca."
+}
+};
+
+(function () {
+  var html = document.documentElement, atual = "pt";
+  var codigos = { pt: "pt-BR", en: "en", es: "es" };
+  function aplicar(l) {
+    var T = TEXTOS[l]; if (!T) return; atual = l;
+    html.lang = codigos[l];
+    document.title = T.doc_titulo;
+    document.querySelectorAll("[data-t]").forEach(function (el) { var v = T[el.getAttribute("data-t")]; if (v != null) el.innerHTML = v; });
+    document.querySelectorAll("[data-t-label]").forEach(function (el) { el.setAttribute("aria-label", T[el.getAttribute("data-t-label")]); });
+    document.querySelectorAll(".seg [data-lang]").forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.lang === l)); });
+    try { localStorage.setItem("orquestrar-idioma", l); } catch (e) {}
+  }
+  var inicial = "pt";
+  try { inicial = localStorage.getItem("orquestrar-idioma") || ""; } catch (e) { inicial = ""; }
+  var q = new URLSearchParams(location.search);
+  if (q.get("lang")) inicial = q.get("lang");
+  if (q.get("tema")) html.setAttribute("data-tema", q.get("tema"));
+  if (!TEXTOS[inicial]) { var n = (navigator.language || "pt").slice(0, 2); inicial = TEXTOS[n] ? n : "pt"; }
+  aplicar(inicial);
+  document.querySelectorAll(".seg [data-lang]").forEach(function (b) { b.addEventListener("click", function () { aplicar(b.dataset.lang); }); });
+
+  document.querySelectorAll("[data-copiar]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var T = TEXTOS[atual], rot = b.querySelector("span");
+      var fim = function () { b.classList.add("ok"); rot.textContent = T.copiado; document.getElementById("aviso").textContent = T.copiado;
+        setTimeout(function () { b.classList.remove("ok"); rot.textContent = TEXTOS[atual].copiar; }, 1600); };
+      if (navigator.clipboard) navigator.clipboard.writeText(b.dataset.copiar).then(fim, fim); else fim();
+    });
+  });
+})();
+</script>
+</body>
+</html>
