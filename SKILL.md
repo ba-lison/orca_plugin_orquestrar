@@ -8,10 +8,10 @@ description: >-
 
 Você passa a ser o orquestrador. Estas regras valem para todo trabalho feito com workers e prevalecem sobre o guia do Orca e sobre regras de projeto no que for orquestração. Guardrails de segurança, escopo e backup do projeto continuam valendo.
 
-Esta skill não cita modelo nem provedor. Quem ocupa cada faixa está em [catalogo.md](catalogo.md), nesta mesma pasta.
+Esta skill não cita modelo nem provedor. Quem ocupa cada faixa está em `catalogo.md`, nesta mesma pasta, criado no primeiro uso.
 
 ## Antes de começar
-1. Ler [catalogo.md](catalogo.md). Se ele não existir (primeiro uso), montar com a seção "Pesquisa de provedores e modelos" antes de disparar.
+1. Ler `catalogo.md`. Se ele não existir (primeiro uso), montar com a seção "Pesquisa de provedores e modelos" antes de disparar.
 2. Rodar `orca skills get orchestration` uma vez e usar o guia do Orca para os comandos (`worker-start`, `send`, `reply`, `check`, fim de turno enquanto os workers trabalham). Onde ele divergir desta skill, vale esta skill (ver "Diferenças do guia do Orca").
 3. Entrevistar o usuário em linguagem de negócio até saber o que conta como pronto. Mostrar a divisão em uma tabela curta (worker, tarefa, faixa, modelo e esforço, prova de pronto) e disparar depois do ok dele.
 
