@@ -53,6 +53,7 @@ A cada disparo, o orquestrador responde quatro perguntas:
 | Código grande, migração, integração arriscada | forte | high |
 | Decisão ambígua, problema sem solução conhecida | topo, só com o sim do usuário | high |
 
+- Distribua entre provedores. Dentro da mesma faixa, prefira o provedor com mais cota sobrando e não concentre a rodada num só. Deixar um provedor disponível de fora pede um motivo concreto (cota, ponto fraco anotado no catálogo, ID não testado), dito ao usuário na tabela da divisão.
 - Prefira dividir o trabalho para caber nas faixas mais baratas. "Mais barato" é o que menos gasta das cotas pagas do usuário, não o preço de API.
 - Se o modelo falhar uma vez, sobe uma faixa. Essa troca conta dentro das 3 tentativas.
 - Faixa acima da tabela só com motivo concreto, anotado na spec. Tamanho ou importância da tarefa não bastam.
@@ -76,7 +77,8 @@ Roda quando aparece provedor ou modelo fora do catálogo, quando o catálogo pas
 6. **Levar ao usuário.** Uma tabela com o que entra, o que muda de faixa e o que sai, com as fontes. Gravar no catálogo só depois do sim, com a data da conferência e a versão anterior guardada.
 
 ## Diferenças do guia do Orca
-- **Worktree:** cada worker numa worktree nova, filha da principal (`--worktree new-child`, ou `new-top-level --base-branch main`). Nunca `--worktree current`, que é o padrão do guia e põe o worker na mesma pasta do orquestrador.
+- **Worktree:** cada worker numa worktree nova a partir da principal do projeto. Com o orquestrador aberto no próprio repositório do projeto, use `--worktree new-child`. Com o orquestrador em outro repositório, use `--worktree new-top-level --repo id:<id> --base-branch main` (o id sai de `orca repo list --json`); a cópia parte da `main` certa, mas aparece sem pai na barra lateral. Nunca `--worktree current`, que é o padrão do guia e põe o worker na mesma pasta do orquestrador.
+- **Onde o merge roda:** o worker de merge trabalha na pasta principal do projeto (`--worktree path:<pasta principal>`), porque juntar na `main` é escrever nela. É o único worker fora de uma cópia própria.
 - **Modelo:** sempre `--model` e `--effort` pelo catálogo, mesmo que o usuário não cite modelo.
 - **Fechar:** quando o worker termina, liberar o terminal (`orca orchestration worker-release`) e remover a worktree (`orca worktree rm --worktree <seletor>`, sem `--delete-branch`), no momento definido em "Merge, conferência e encerramento".
 - **Merge:** nunca feito pelo orquestrador.

@@ -68,7 +68,19 @@ What changes:
 
 ### Proof
 
-[PENDING: first real job with `/orquestrar`. How many workers, how long, how much quota, what failed and how it was fixed.]
+This repository was published by the skill itself. On 2026-11-19, `/orquestrar` split the job into workers in Orca, and the first four steps took 6 minutes:
+
+| Worker | Task | Model and effort | What happened |
+| --- | --- | --- | --- |
+| assemble | Copy the files, add the license, fix the links | Claude Haiku 5.5 · medium | Done. It also caught a wrong check in the orchestrator's own instructions |
+| review | Read everything before going public, without editing | Claude Sonnet 5.5 · high | Found a dead link to `catalogo.md` and the author's personal e-mail in the commits |
+| assemble, round 2 | Fix both | Claude Haiku 5.5 · medium | Link removed, commits rewritten to GitHub's no-reply address |
+| merge | Bring the branch into `main` and run the README checks in three languages | Gemini 4 Hydrogen (Antigravity) · medium | All three checks passed |
+| proof | Write this section | DeepSeek V4.1 Flash (OpenCode) | |
+
+A second merge worker brought this section into `main`, and a last worker published the repository. Quota moved little: Claude stayed at 6% of the week and Antigravity at 1%.
+
+The run also changed the skill. The orchestrator sent the first workers to a single provider; the user noticed, and the skill now asks to spread work across providers with quota left.
 
 ## Getting started
 

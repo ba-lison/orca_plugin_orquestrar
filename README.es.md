@@ -68,7 +68,19 @@ Qué cambia:
 
 ### Prueba
 
-[PENDIENTE: primer trabajo real con `/orquestrar`. Cuántos workers, cuánto tiempo, cuánta cuota, qué falló y cómo se resolvió.]
+Este repositorio lo publicó la propia skill. El 19/11/2026, `/orquestrar` dividió el trabajo en workers en Orca, y los cuatro primeros pasos tardaron 6 minutos:
+
+| Worker | Tarea | Modelo y esfuerzo | Qué pasó |
+| --- | --- | --- | --- |
+| montar | Copiar los archivos, poner la licencia, ajustar los enlaces | Claude Haiku 5.5 · medium | Listo. También encontró una comprobación errónea en las instrucciones del propio orquestador |
+| revisar | Leer todo antes de hacerlo público, sin editar | Claude Sonnet 5.5 · high | Encontró un enlace roto a `catalogo.md` y el e-mail personal del autor en los commits |
+| montar, 2.ª ronda | Corregir ambos | Claude Haiku 5.5 · medium | Enlace retirado y commits reescritos con la dirección anónima de GitHub |
+| merge | Llevar la branch a `main` y ejecutar la comprobación del README en los tres idiomas | Gemini 4 Hydrogen (Antigravity) · medium | Las tres comprobaciones pasaron |
+| prueba | Escribir esta sección | DeepSeek V4.1 Flash (OpenCode) | |
+
+Un segundo worker de merge trajo esta sección a `main`, y un último worker publicó el repositorio. La cuota apenas se movió: Claude se quedó en el 6% de la semana y Antigravity en el 1%.
+
+La ronda también cambió la skill. El orquestador mandó los primeros workers a un solo proveedor; el usuario lo notó, y la skill ahora pide repartir el trabajo entre los proveedores con cuota disponible.
 
 ## Cómo empezar
 
